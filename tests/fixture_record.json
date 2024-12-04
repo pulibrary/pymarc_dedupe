@@ -1,0 +1,403 @@
+{
+  "leader": "01306nam a2200349 a 4500",
+  "fields": [
+    {
+      "001": "99129089206406421"
+    },
+    {
+      "005": "20240813104234.0"
+    },
+    {
+      "006": "m    |   d |      "
+    },
+    {
+      "007": "cr||n||||||||n"
+    },
+    {
+      "008": "020506s1856    nyu     o     000 p eng d"
+    },
+    {
+      "035": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "(GALE)CY102852152"
+          }
+        ]
+      }
+    },
+    {
+      "035": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "(OCoLC)123428499"
+          }
+        ]
+      }
+    },
+    {
+      "035": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "(CKB)4920000002482249"
+          }
+        ]
+      }
+    },
+    {
+      "035": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "(CStRLIN)CTRG02-B395"
+          }
+        ]
+      }
+    },
+    {
+      "035": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "(EXLCZ)994920000002482249"
+          }
+        ]
+      }
+    },
+    {
+      "040": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "ResP"
+          },
+          {
+            "c": "ResP"
+          },
+          {
+            "d": "Thomson Gale"
+          }
+        ]
+      }
+    },
+    {
+      "100": {
+        "ind1": "1",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "Street, Alfred Billings,"
+          },
+          {
+            "d": "1811?-1881."
+          }
+        ]
+      }
+    },
+    {
+      "245": {
+        "ind1": "1",
+        "ind2": "0",
+        "subfields": [
+          {
+            "a": "Science :"
+          },
+          {
+            "b": "a poem dedicated to the American Association for the Advancement of Science : Albany, August 28, 1856 /"
+          },
+          {
+            "c": "by Alfred B. Street."
+          }
+        ]
+      }
+    },
+    {
+      "246": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "Science "
+          }
+        ]
+      }
+    },
+    {
+      "260": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "Albany :"
+          },
+          {
+            "b": "Van Benthuysen, Printer,"
+          },
+          {
+            "c": "1856."
+          }
+        ]
+      }
+    },
+    {
+      "300": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "1 online resource (9 p. ) "
+          }
+        ]
+      }
+    },
+    {
+      "336": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "text"
+          },
+          {
+            "b": "txt"
+          },
+          {
+            "2": "rdacontent"
+          }
+        ]
+      }
+    },
+    {
+      "337": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "computer"
+          },
+          {
+            "b": "c"
+          },
+          {
+            "2": "rdamedia"
+          }
+        ]
+      }
+    },
+    {
+      "338": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "online resource"
+          },
+          {
+            "b": "cr"
+          },
+          {
+            "2": "rdacarrier"
+          }
+        ]
+      }
+    },
+    {
+      "490": {
+        "ind1": "1",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "Sabin Americana : History of the Americas, 1500-1926"
+          }
+        ]
+      }
+    },
+    {
+      "510": {
+        "ind1": "4",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "RLIN,"
+          },
+          {
+            "c": "CTRG02-B395"
+          }
+        ]
+      }
+    },
+    {
+      "500": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "\"This poem, for want of time, was not delivered\"--p. [3]"
+          }
+        ]
+      }
+    },
+    {
+      "500": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "Reproduction of original from Huntington Library."
+          }
+        ]
+      }
+    },
+    {
+      "500": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "Sabin no. 92774."
+          }
+        ]
+      }
+    },
+    {
+      "650": {
+        "ind1": " ",
+        "ind2": "0",
+        "subfields": [
+          {
+            "a": "Science"
+          },
+          {
+            "v": "Poetry."
+          }
+        ]
+      }
+    },
+    {
+      "710": {
+        "ind1": "2",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "American Association for the Advancement of Science."
+          }
+        ]
+      }
+    },
+    {
+      "830": {
+        "ind1": " ",
+        "ind2": "0",
+        "subfields": [
+          {
+            "a": "Sabin Americana : History of the Americas, 1500-1926."
+          }
+        ]
+      }
+    },
+    {
+      "906": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "a": "BOOK"
+          }
+        ]
+      }
+    },
+    {
+      "950": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "c": "2024-08-26 03:10:46 US/Eastern"
+          },
+          {
+            "b": "2023-05-06 13:30:30 US/Eastern"
+          },
+          {
+            "a": "false"
+          }
+        ]
+      }
+    },
+    {
+      "951": {
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "v": "2023-11-09 15:08:28 US/Eastern"
+          },
+          {
+            "g": "Gale"
+          },
+          {
+            "u": "System"
+          },
+          {
+            "r": "669130-princetondb"
+          },
+          {
+            "t": "2023-11-09 15:08:28 US/Eastern"
+          },
+          {
+            "x": "https://na05.alma.exlibrisgroup.com/view/uresolver/01PRI_INST/openurl?u.ignore_date_coverage=true&portfolio_pid=53999821850006421&Force_direct=true"
+          },
+          {
+            "s": "System"
+          },
+          {
+            "0": "53999821850006421"
+          },
+          {
+            "w": "2023-11-09 20:08:28"
+          },
+          {
+            "f": "true"
+          },
+          {
+            "m": "61998608740006421"
+          },
+          {
+            "n": "Sabin Americana: History of the Americas, 1500\\u20131926"
+          },
+          {
+            "b": "param"
+          },
+          {
+            "q": "1810778-princetondb"
+          },
+          {
+            "1": "62998608730006421"
+          },
+          {
+            "c": "d?u.ignore_date_coverage=true&rft.mms_id=99129089206406421"
+          },
+          {
+            "a": "Available"
+          },
+          {
+            "l": "612470000000000038"
+          },
+          {
+            "e": "BOOK"
+          },
+          {
+            "8": "53999821850006421"
+          }
+        ]
+      }
+    }
+  ]
+}
