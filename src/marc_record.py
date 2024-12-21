@@ -39,7 +39,7 @@ class MarcRecord:
       title = str(title_field.get('a') or '') + str(title_field.get('b') or '') + str(title_field.get('p') or '')
       title = self.strip_punctuation(title)
       return title
-    except KeyError:
+    except (KeyError, AttributeError):
       return None
 
   def title_from_245(self):
@@ -87,13 +87,14 @@ class MarcRecord:
       return None
     
   def edition_as_gold_rush(self):
-    lowercase_ed = self.edition().lower()
+    lowercase_ed = ''
     try:
+      lowercase_ed = self.edition().lower()
       chars =  re.findall(r'\d+', lowercase_ed)[0]
-    except (TypeError, IndexError):
+    except (TypeError, IndexError, AttributeError):
       try:
         chars =  re.findall(r'\w+', lowercase_ed)[0]
-      except (TypeError, IndexError):
+      except (TypeError, IndexError, AttributeError):
         return '___'
     return chars.ljust(3, '_')[0:3]
   

@@ -114,6 +114,16 @@ def test_date_of_publication():
   new_record = MarcRecord(pymarc_record)
   assert(new_record.date_of_publication()) == 1856
 
+def test_empty_date_of_publication():
+  pymarc_record = Record()
+  new_record = MarcRecord(pymarc_record)
+  assert(new_record.date_of_publication()) == None
+  
+def test_is_valid_date_only_spaces():
+  pymarc_record = Record()
+  new_record = MarcRecord(pymarc_record)
+  assert(new_record.is_valid_date('    ')) == False
+
 def test_title():
   pymarc_record = Record()
   pymarc_record.add_field(
@@ -122,6 +132,11 @@ def test_title():
   )
   new_record = MarcRecord(pymarc_record)
   assert(new_record.title()) == 'Science a poem dedicated etc and so forth Labor unions'
+
+def test_empty_title():
+  pymarc_record = Record()
+  new_record = MarcRecord(pymarc_record)
+  assert(new_record.title()) == None
 
 def test_vernacular_title():
   pymarc_record = Record()
@@ -202,13 +217,18 @@ def test_edition_as_gold_rush():
   new_record = MarcRecord(pymarc_record)
   assert(new_record.edition_as_gold_rush()) == '2__'
 
-# def test_edition_as_gold_rush_alpha():
-#   pymarc_record = Record()
-#   pymarc_record.add_field(
-#     Field(tag='250', subfields=[Subfield(code='a', value='First edition')])
-#   )
-#   new_record = MarcRecord(pymarc_record)
-#   assert(new_record.edition_as_gold_rush()) == '1__'
+def test_edition_as_gold_rush_alpha():
+  pymarc_record = Record()
+  pymarc_record.add_field(
+    Field(tag='250', subfields=[Subfield(code='a', value='First edition')])
+  )
+  new_record = MarcRecord(pymarc_record)
+  assert(new_record.edition_as_gold_rush()) == 'fir'
+
+def test_empty_edition_as_gold_rush():
+  pymarc_record = Record()
+  new_record = MarcRecord(pymarc_record)
+  assert(new_record.edition_as_gold_rush()) == '___'
 
 def test_publisher_name_264():
   pymarc_record = Record()
@@ -225,6 +245,11 @@ def test_publisher_name_260():
   )
   new_record = MarcRecord(pymarc_record)
   assert(new_record.publisher_name()) == 'Doubleday & Company Inc'
+
+def test_empty_publisher_name():
+  pymarc_record = Record()
+  new_record = MarcRecord(pymarc_record)
+  assert(new_record.publisher_name()) == None
 
 def test_type_of():
   pymarc_record = Record(leader="00475cas a2200169 i 4500")
@@ -266,6 +291,12 @@ def test_vernacular_author():
   )
   new_record = MarcRecord(pymarc_record)
   assert(new_record.author()) == 'Χατζηαντωνίου Κωστας'
+
+# This might be weird behavior?
+def test_number_of_characters():
+  pymarc_record = Record()
+  new_record = MarcRecord(pymarc_record)
+  assert(new_record.number_of_characters(1982)) == False
 
 def test_corp_author():
   pymarc_record = Record()
@@ -333,10 +364,20 @@ def test_is_electronic_resource_from_007():
   assert(new_record.is_electronic_resource_from_007()) == True
   assert(new_record.is_electronic_resource()) == True
 
+def test_is_electronic_resource_from_007():
+  pymarc_record = Record()
+  pymarc_record.add_field(
+    Field(tag='007', data='d')
+  )
+  new_record = MarcRecord(pymarc_record)
+  assert(new_record.is_electronic_resource_from_007()) == False
+  assert(new_record.is_electronic_resource()) == False
+
 def test_is_electronic_resource_when_not_e():
   pymarc_record = Record()
   new_record = MarcRecord(pymarc_record)
   assert(new_record.is_electronic_resource_from_title()) == False
   assert(new_record.is_electronic_resource_from_reproduction()) == False
   assert(new_record.is_electronic_resource_from_description()) == False
+  assert(new_record.is_electronic_resource_from_007()) == False
   assert(new_record.is_electronic_resource()) == False
