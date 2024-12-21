@@ -9,20 +9,6 @@ def test_potentially_empty_fields():
   for record in records:
     new_record = MarcRecord(record)
     new_record.to_dictionary()
-    new_record.as_gold_rush()
-
-def test_as_gold_rush():
-  pymarc_record = record_from_file
-  new_record = MarcRecord(pymarc_record)
-  assert(new_record.as_gold_rush()) == 'Science_a_poem_dedicated_to_the_American_Association_for_the_Advanceme18561___'
-
-def test_title_as_gold_rush():
-  pymarc_record = Record()
-  pymarc_record.add_field(
-    Field(tag='245', subfields=[Subfield(code='a', value='Short title')])
-  )
-  new_record = MarcRecord(pymarc_record)
-  assert(new_record.title_as_gold_rush()) == 'Short_title___________________________________________________________'
 
 def test_two_valid_dates_publication_year():
   # If both date_one and date_two are valid dates, use date_two
@@ -178,19 +164,6 @@ def test_normalize_pagination():
   new_record = MarcRecord(pymarc_record)
   assert(new_record.pagination()) == '578 pages'
 
-def test_pagination_as_gold_rush():
-  pymarc_record = Record()
-  pymarc_record.add_field(
-    Field(tag='300', subfields=[Subfield(code='a', value='578 p. ; '), Subfield(code='c', value='27 cm')])
-  )
-  new_record = MarcRecord(pymarc_record)
-  assert(new_record.pagination_as_gold_rush()) == '578_'
-
-def test_pagination_as_gold_rush_full_record():
-  pymarc_record = record_from_file
-  new_record = MarcRecord(pymarc_record)
-  assert(new_record.pagination_as_gold_rush()) == '1___'
-
 def test_normalize_extent():
   pymarc_record = Record()
   new_record = MarcRecord(pymarc_record)
@@ -208,27 +181,6 @@ def test_edition_statement():
   )
   new_record = MarcRecord(pymarc_record)
   assert(new_record.edition()) == '2nd Edition'
-
-def test_edition_as_gold_rush():
-  pymarc_record = Record()
-  pymarc_record.add_field(
-    Field(tag='250', subfields=[Subfield(code='a', value='2nd Ed.')])
-  )
-  new_record = MarcRecord(pymarc_record)
-  assert(new_record.edition_as_gold_rush()) == '2__'
-
-def test_edition_as_gold_rush_alpha():
-  pymarc_record = Record()
-  pymarc_record.add_field(
-    Field(tag='250', subfields=[Subfield(code='a', value='First edition')])
-  )
-  new_record = MarcRecord(pymarc_record)
-  assert(new_record.edition_as_gold_rush()) == 'fir'
-
-def test_empty_edition_as_gold_rush():
-  pymarc_record = Record()
-  new_record = MarcRecord(pymarc_record)
-  assert(new_record.edition_as_gold_rush()) == '___'
 
 def test_publisher_name_264():
   pymarc_record = Record()
