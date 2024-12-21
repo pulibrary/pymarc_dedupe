@@ -22,14 +22,6 @@ class MarcRecord:
     }
     return dict
 
-  def as_gold_rush(self):
-    return self.title_as_gold_rush() + str(self.publication_year() or '') + self.pagination_as_gold_rush()
-
-  def title_as_gold_rush(self):
-    some_string = self.title().translate(str.maketrans(' ', '_'))
-    some_string = some_string.ljust(70, '_')
-    return some_string[0:70]
-
   def title(self):
     if self.vernacular_title_field():
       title_field = self.vernacular_title_field()
@@ -72,32 +64,13 @@ class MarcRecord:
       return self.normalize_extent(self.record['300'].get('a'))
     except KeyError:
       return None
-  
-  def pagination_as_gold_rush(self):
-    try:
-      nums =  re.findall(r'\d+', self.pagination())[0]
-      return nums.ljust(4, '_')[0:4]
-    except (TypeError, IndexError):
-      return '____'
 
   def edition(self):
     try:
       return self.normalize_edition(self.record['250'].get('a'))
     except KeyError:
       return None
-    
-  def edition_as_gold_rush(self):
-    lowercase_ed = ''
-    try:
-      lowercase_ed = self.edition().lower()
-      chars =  re.findall(r'\d+', lowercase_ed)[0]
-    except (TypeError, IndexError, AttributeError):
-      try:
-        chars =  re.findall(r'\w+', lowercase_ed)[0]
-      except (TypeError, IndexError, AttributeError):
-        return '___'
-    return chars.ljust(3, '_')[0:3]
-  
+
   def publisher_name(self):
     try:
       pub = self.record['264']['b']
