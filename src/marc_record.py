@@ -216,10 +216,10 @@ class MarcRecord:
 
   def normalize_extent(self, extent):
     extent_mapping = {
-      'p\.': 'pages',
-      'v\.': 'volumes',
-      'vol\.': 'volumes',
-      'ℓ\.': 'leaves'
+      r'p\.': 'pages',
+      r'v\.': 'volumes',
+      r'vol\.': 'volumes',
+      r'ℓ\.': 'leaves'
     }
     for key, value in extent_mapping.items():
       extent = re.sub(key, value, extent)
