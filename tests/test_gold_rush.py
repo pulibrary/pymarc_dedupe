@@ -16,7 +16,7 @@ def test_as_gold_rush():
   pymarc_record = record_from_file
   new_record = MarcRecord(pymarc_record)
   new_string = GoldRush(new_record)
-  assert(new_string.as_gold_rush()) == 'science_a_poem_dedicated_to_the_american_association_for_the_advanceme18561___'
+  assert(new_string.as_gold_rush()) == 'science___a_poem_dedicated_to_the_american_association_for_the_advance18561___'
 
 def test_title():
   pymarc_record = Record()
@@ -35,7 +35,7 @@ def test_long_title():
   )
   new_record = MarcRecord(pymarc_record)
   new_string = GoldRush(new_record)
-  assert(new_string.title()) == 'science_a_poem_dedicated_etc_and_so_forth_labor_unions________________'
+  assert(new_string.title()) == 'science___a_poem_dedicated_etc____and_so_forth___labor_unions_________'
 
 def test_pagination():
   pymarc_record = Record()
@@ -75,3 +75,14 @@ def test_empty_edition_as_gold_rush():
   new_record = MarcRecord(pymarc_record)
   new_string = GoldRush(new_record)
   assert(new_string.edition()) == '___'
+
+def test_strip_punctuation():
+  pymarc_record = Record()
+  new_record = MarcRecord(pymarc_record)
+  new_string = GoldRush(new_record)
+  assert(new_string.strip_punctuation(' & ')) == 'and'
+  assert(new_string.strip_punctuation("'{ }")) == '_'
+  # 
+  assert(new_string.strip_punctuation("!()\\-©")) == '______'
+  assert(new_string.strip_punctuation('  and  Another ')) == 'and_another'
+  assert(new_string.strip_punctuation('The Title ')) == 'title'

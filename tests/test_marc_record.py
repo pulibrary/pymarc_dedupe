@@ -113,11 +113,11 @@ def test_is_valid_date_only_spaces():
 def test_title():
   pymarc_record = Record()
   pymarc_record.add_field(
-    Field(tag='245', subfields=[Subfield(code='a', value='Science :'), Subfield(code='b', value='a poem dedicated etc. : and so forth /'),
-                                Subfield(code='p', value='Labor unions'), Subfield(code='p', value='Supplement')])
+    Field(tag='245', subfields=[Subfield(code='a', value='Science :'), Subfield(code='b', value='a poem dedicated etc. : and so forth'),
+                                Subfield(code='p', value='Labor unions'), Subfield(code='p', value='Supplement /')])
   )
   new_record = MarcRecord(pymarc_record)
-  assert(new_record.title()) == 'Science a poem dedicated etc and so forth Labor unions'
+  assert(new_record.title()) == 'Science : a poem dedicated etc. : and so forth Labor unions'
 
 def test_empty_title():
   pymarc_record = Record()
@@ -141,7 +141,7 @@ def test_title_no_subfield_p():
     Field(tag='245', subfields=[Subfield(code='a', value='Science :'), Subfield(code='b', value='a poem dedicated etc. : and so forth /')])
   )
   new_record = MarcRecord(pymarc_record)
-  assert(new_record.title()) == 'Science a poem dedicated etc and so forth'
+  assert(new_record.title()) == 'Science : a poem dedicated etc. : and so forth'
 
 def test_strip_punctuation():
   pymarc_record = Record()
@@ -231,7 +231,7 @@ def test_author():
     Field(tag='100', subfields=[Subfield(code='a', value='Jacquet de La Guerre, Elisabeth-Claude, ')])
   )
   new_record = MarcRecord(pymarc_record)
-  assert(new_record.author()) == 'Jacquet de La Guerre ElisabethClaude'
+  assert(new_record.author()) == 'Jacquet de La Guerre, Elisabeth-Claude'
 
 def test_vernacular_author():
   pymarc_record = Record()
@@ -242,7 +242,7 @@ def test_vernacular_author():
     Field(tag='880', subfields=[Subfield(code='6', value='100-02/(S)'), Subfield(code='a', value='Χατζηαντωνίου, Κωστας, ')])
   )
   new_record = MarcRecord(pymarc_record)
-  assert(new_record.author()) == 'Χατζηαντωνίου Κωστας'
+  assert(new_record.author()) == 'Χατζηαντωνίου, Κωστας'
 
 # This might be weird behavior?
 def test_number_of_characters():
@@ -256,7 +256,7 @@ def test_corp_author():
     Field(tag='110', subfields=[Subfield(code='a', value='Lexus (Firm : Peru).')])
   )
   new_record = MarcRecord(pymarc_record)
-  assert(new_record.author()) == 'Lexus Firm Peru'
+  assert(new_record.author()) == 'Lexus (Firm : Peru)'
 
 def test_meeting_name_author():
   pymarc_record = Record()
@@ -264,7 +264,7 @@ def test_meeting_name_author():
     Field(tag='111', subfields=[Subfield(code='a', value='Colloque Voyages et conscience patrimoniale, Aubin-Louis Millin (1759-1818) entre France et Italie ')])
   )
   new_record = MarcRecord(pymarc_record)
-  assert(new_record.author()) == 'Colloque Voyages et conscience patrimoniale AubinLouis Millin 17591818 entre France et Italie'
+  assert(new_record.author()) == 'Colloque Voyages et conscience patrimoniale, Aubin-Louis Millin (1759-1818) entre France et Italie'
 
 def test_title_inclusive_dates():
   pymarc_record = Record()

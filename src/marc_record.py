@@ -28,8 +28,11 @@ class MarcRecord:
     else:
       title_field = self.title_from_245()
     try:
-      title = str(title_field.get('a') or '') + str(title_field.get('b') or '') + str(title_field.get('p') or '')
-      title = self.strip_punctuation(title)
+      subfield_a = str(title_field.get('a') or '')
+      subfield_b = str(title_field.get('b') or '')
+      subfield_p = str(title_field.get('p') or '')
+      title = ' '.join([subfield_a, subfield_b, subfield_p])
+      title = self.strip_ending_punctuation(title)
       return title
     except (KeyError, AttributeError):
       return None
@@ -102,7 +105,7 @@ class MarcRecord:
       author_field = self.author_from_1XX()
 
     if author_field:
-      return self.strip_punctuation(author_field.get('a'))
+      return self.strip_ending_punctuation(author_field.get('a'))
     else:
       return None
     
@@ -198,6 +201,10 @@ class MarcRecord:
     for key, value in extent_mapping.items():
       extent = re.sub(key, value, extent)
     return self.strip_punctuation(extent)
+
+  def strip_ending_punctuation(self, some_string):
+    punctuation_to_strip = string.punctuation.replace(')', '')
+    return some_string.strip(punctuation_to_strip + ' ')
 
   def strip_punctuation(self, some_string):
     punctuation_to_strip = string.punctuation.replace('&', '')
