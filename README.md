@@ -20,6 +20,12 @@ The second layer of normalization will be built on the first layer of normalizat
 
 To this end, there will be much more strict string normalization in this layer. Only vernacular versions of fields will be preserved.
 
+- Some normalization strongly favors English-language texts - e.g.
+  - Replacing English-language articles at the beginnings of titles
+    - This also seems like it duplicates the 245 second indicator for non-filing characters
+  - Replacing '&' with 'and'
+
+
 ## Developing this application
 ### Set-up and install dependencies
 1. Make a .venv
