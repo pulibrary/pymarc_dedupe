@@ -9,7 +9,7 @@ class GoldRush:
     return self.title() + self.publication_year() + self.pagination()
 
   def title(self):
-    some_string = self.marc_record.title().translate(str.maketrans(' ', '_')).lower()
+    some_string = self.strip_punctuation(self.marc_record.title())
     some_string = some_string.ljust(70, '_')
     return some_string[0:70]
 
@@ -34,3 +34,49 @@ class GoldRush:
       except (TypeError, IndexError, AttributeError):
         return '___'
     return chars.ljust(3, '_')[0:3]
+
+  def strip_punctuation(self, some_string):
+    some_string = re.sub('  ', ' ', some_string).strip().lower()
+    some_string = re.sub('^the +', '', some_string)
+    some_string = some_string.translate(str.maketrans(self.translation_dictionary()))
+    
+    return some_string
+
+  def translation_dictionary(self):
+    dict = {
+      '&': 'and',
+      '%': '_',
+      "'": '',
+      '{': '',
+      '}': '',
+      ' ': '_',
+      '!': '_',
+      '"': '_',
+      '#': '_',
+      '$': '_',
+      '(': '_',
+      ')': '_',
+      '*': '_',
+      '+': '_',
+      ',': '_',
+      '-': '_',
+      '.': '_',
+      '/': '_',
+      ':': '_',
+      ';': '_',
+      '<': '_',
+      '=': '_',
+      '>': '_',
+      '?': '_',
+      '@': '_',
+      '[': '_',
+      "\\": '_',
+      ']': '_',
+      '^': '_',
+      '`': '_',
+      '|': '_',
+      '~': '_',
+      '©': '_'
+
+    }
+    return dict
