@@ -33,7 +33,7 @@ jobs:
       - checkout
       - run:
           name: "Install requirements"
-          command: "pip install -r requirements/development.txt"
+          command: "pip install -r requirements/testing.txt"
       - run:
           name: "Run tests and measure coverage"
           command: "coverage run --source=src -m pytest tests/ && coveralls"

@@ -1,5 +1,3 @@
 -r common.txt
 -r linting.txt
-coveralls
-pytest
-
+-r testing.txt
