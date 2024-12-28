@@ -5,6 +5,20 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
+  lint:
+    docker:
+      - image: cimg/python:3.12
+    steps:
+      - checkout
+      - run:
+          name: "Install requirements"
+          command: "pip install -r requirements/linting.txt"
+      - run:
+          name: 'python: ruff format'
+          command: ruff format . --check
+      - run:
+          name: 'python ruff check'
+          command: ruff check .
   tests:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
@@ -19,7 +33,7 @@ jobs:
       - checkout
       - run:
           name: "Install requirements"
-          command: "pip install -r requirements.txt"
+          command: "pip install -r requirements/development.txt"
       - run:
           name: "Run tests and measure coverage"
           command: "coverage run --source=src -m pytest tests/ && coveralls"
@@ -27,4 +41,5 @@ jobs:
 workflows:
   ci: 
     jobs:
+      - lint
       - tests
