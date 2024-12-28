@@ -1,5 +1,4 @@
-import pytest
-from pymarc import parse_xml_to_array, Record, Field, Subfield, Leader
+from pymarc import parse_xml_to_array, Record, Field, Subfield
 from src.marc_record import MarcRecord
 from src.gold_rush import GoldRush
 
@@ -16,7 +15,25 @@ def test_as_gold_rush():
   pymarc_record = record_from_file
   new_record = MarcRecord(pymarc_record)
   new_string = GoldRush(new_record)
-  assert(new_string.as_gold_rush()) == 'science___a_poem_dedicated_to_the_american_association_for_the_advance18561___'
+  assert(new_string.as_gold_rush()) == 'scienceapoemdedicatedtotheamericanassociationfortheadvancementofscienc18561______vanbea________________________________________'
+
+def test_as_gold_rush_their_example():
+  pymarc_record = Record(leader="03377cam a22006134i 4500")
+  pymarc_record.add_field(
+    Field(tag='245', subfields=[Subfield(code='a', value='On tyranny :'),
+                                Subfield(code='b', value='twenty lessons from the twentieth century /'),
+                                Subfield(code='c', value='Timothy Snyder.')]),
+    Field(tag='008', data='170403s2017 nyu 000 0 eng '),
+    Field(tag='300', subfields=[Subfield(code='a', value='126 pages ;'), Subfield(code='c', value='16 cm')]),
+    Field(tag='250', subfields=[Subfield(code='a', value='First edition.')]),
+    Field(tag='260', subfields=[Subfield(code='a', value='New York :'), Subfield(code='b', value='Tim Duggan Books, '), Subfield(code='c', value='[2017]')])
+  )
+  new_record = MarcRecord(pymarc_record)
+  new_string = GoldRush(new_record)
+  # Their first field seems to have 75 characters, not 70, in their example, but the text says 70.
+  # They have underscores after the year instead of page numbers
+  # They have no space in the publisher, even though it says not to remove them
+  assert(new_string.as_gold_rush()) == 'ontyrannytwentylessonsfromthetwentiethcentury_________________________2017126_1__timdua________________________________________'#snyde_______________p'
 
 def test_title():
   pymarc_record = Record()
@@ -25,7 +42,7 @@ def test_title():
   )
   new_record = MarcRecord(pymarc_record)
   new_string = GoldRush(new_record)
-  assert(new_string.title()) == 'short_title___________________________________________________________'
+  assert(new_string.title()) == 'shorttitle____________________________________________________________'
 
 def test_long_title():
   pymarc_record = Record()
@@ -35,7 +52,7 @@ def test_long_title():
   )
   new_record = MarcRecord(pymarc_record)
   new_string = GoldRush(new_record)
-  assert(new_string.title()) == 'science___a_poem_dedicated_etc____and_so_forth___labor_unions_________'
+  assert(new_string.title()) == 'scienceapoemdedicatedetcandsoforthlaborunions_________________________'
 
 def test_pagination():
   pymarc_record = Record()
@@ -68,7 +85,7 @@ def test_edition_as_gold_rush_alpha():
   )
   new_record = MarcRecord(pymarc_record)
   new_string = GoldRush(new_record)
-  assert(new_string.edition()) == 'fir'
+  assert(new_string.edition()) == '1__'
 
 def test_empty_edition_as_gold_rush():
   pymarc_record = Record()
