@@ -7,7 +7,8 @@ class MarcRecord:
         self.record = record
 
     def to_dictionary(self):
-        dict = {
+        """Takes a MarcRecord and returns a dictionary including the most salient fields"""
+        return {
             "title": self.title(),
             "publication_year": self.publication_year(),
             "pagination": self.pagination(),
@@ -21,7 +22,6 @@ class MarcRecord:
             "gov_doc_number": self.gov_doc_number(),
             "is_electronic_resource": self.is_electronic_resource(),
         }
-        return dict
 
     def title(self):
         if self.vernacular_title_field():
@@ -101,21 +101,19 @@ class MarcRecord:
         num = self.record["245"].get("n")
         if num:
             return self.strip_punctuation(num)
-        else:
-            return None
+        return None
 
     def author(self):
         if self.vernacular_author_field():
             author_field = self.vernacular_author_field()
         else:
-            author_field = self.author_from_1XX()
+            author_field = self.author_from_1xx()
 
         if author_field:
             return self.strip_ending_punctuation(author_field.get("a"))
-        else:
-            return None
+        return None
 
-    def author_from_1XX(self):
+    def author_from_1xx(self):
         try:
             return self.record["100"]
         except KeyError:
@@ -143,8 +141,7 @@ class MarcRecord:
         date = self.record["245"].get("f")
         if date:
             return self.strip_punctuation(date)
-        else:
-            return None
+        return None
 
     def gov_doc_number(self):
         try:
@@ -153,15 +150,12 @@ class MarcRecord:
             return None
 
     def is_electronic_resource(self):
-        if (
+        return bool(
             self.is_electronic_resource_from_title()
             or self.is_electronic_resource_from_reproduction()
             or self.is_electronic_resource_from_description()
             or self.is_electronic_resource_from_007()
-        ):
-            return True
-        else:
-            return False
+        )
 
     def is_electronic_resource_from_title(self):
         try:
@@ -179,19 +173,13 @@ class MarcRecord:
 
     def is_electronic_resource_from_description(self):
         try:
-            if re.search("online resource", self.record["300"].get("a"), re.IGNORECASE):
-                return True
-            else:
-                return False
+            return bool(re.search("online resource", self.record["300"].get("a"), re.IGNORECASE))
         except KeyError:
             return False
 
     def is_electronic_resource_from_007(self):
         try:
-            if self.record["007"].data[0] == "c":
-                return True
-            else:
-                return False
+            return bool(self.record["007"].data[0] == "c")
         except KeyError:
             return False
 
@@ -269,5 +257,4 @@ class MarcRecord:
         date_string = self.strip_punctuation(date_string)
         if self.is_valid_date(date_string):
             return int(date_string)
-        else:
-            return None
+        return None

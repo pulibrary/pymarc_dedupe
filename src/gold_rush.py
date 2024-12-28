@@ -88,7 +88,7 @@ class GoldRush:
         return some_string
 
     def title_translation_dictionary(self):
-        dict = {
+        return {
             "&": "and",
             "%": "",
             "'": "",
@@ -123,7 +123,6 @@ class GoldRush:
             "~": "",
             "©": "",
         }
-        return dict
 
     def strip_punctuation(self, some_string):
         some_string = re.sub("  ", " ", some_string).strip().lower()
@@ -134,7 +133,7 @@ class GoldRush:
         return some_string
 
     def translation_dictionary(self):
-        dict = {
+        return {
             "&": "and",
             "%": "_",
             "'": "",
@@ -169,4 +168,3 @@ class GoldRush:
             "~": "_",
             "©": "_",
         }
-        return dict
