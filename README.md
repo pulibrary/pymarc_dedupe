@@ -51,3 +51,18 @@ pip install -U pytest
 ```bash
 pytest
 ```
+
+### Linting
+1. ruff - fast
+  - Formatter - `--check` flag does not make changes. Run without `--check` flag for automatic fixing
+  ```bash
+  ruff format . --check
+  ```
+  - Linter
+  ```bash
+  ruff check .
+  ```
+2. pylint - slower, does more in-depth checks
+```bash
+pylint src tests --disable=C0114,C0115,C0116
+```

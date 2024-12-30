@@ -173,7 +173,9 @@ class MarcRecord:
 
     def is_electronic_resource_from_description(self):
         try:
-            return bool(re.search("online resource", self.record["300"].get("a"), re.IGNORECASE))
+            return bool(
+                re.search("online resource", self.record["300"].get("a"), re.IGNORECASE)
+            )
         except KeyError:
             return False
 

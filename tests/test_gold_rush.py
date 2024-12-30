@@ -1,25 +1,35 @@
+import pytest
 from pymarc import parse_xml_to_array, Record, Field, Subfield
 from src.marc_record import MarcRecord
 from src.gold_rush import GoldRush
 
-records = parse_xml_to_array("alma_marc_records.xml")
-record_from_file = records[0]
+
+@pytest.fixture
+def all_records():
+    return parse_xml_to_array("alma_marc_records.xml")
 
 
-def test_potentially_empty_fields():
-    for record in records:
+@pytest.fixture
+def record_from_file(all_records: list):
+    return all_records[0]
+
+
+def test_potentially_empty_fields(all_records):
+    for record in all_records:
         new_record = MarcRecord(record)
         new_string = GoldRush(new_record)
         new_string.as_gold_rush()
 
 
-def test_as_gold_rush():
+def test_as_gold_rush(record_from_file):
     pymarc_record = record_from_file
     new_record = MarcRecord(pymarc_record)
     new_string = GoldRush(new_record)
     assert (
         (new_string.as_gold_rush())
+        # pylint: disable=line-too-long
         == "scienceapoemdedicatedtotheamericanassociationfortheadvancementofscienc18561______vanbea________________________________________"
+        # pylint: enable=line-too-long
     )
 
 
@@ -59,7 +69,9 @@ def test_as_gold_rush_their_example():
     # They have no space in the publisher, even though it says not to remove them
     assert (
         (new_string.as_gold_rush())
+        # pylint: disable=line-too-long
         == "ontyrannytwentylessonsfromthetwentiethcentury_________________________2017126_1__timdua________________________________________"
+        # pylint: enable=line-too-long
     )  # snyde_______________p'
 
 
@@ -111,7 +123,7 @@ def test_pagination():
     assert (new_string.pagination()) == "578_"
 
 
-def test_pagination_record():
+def test_pagination_record(record_from_file):
     pymarc_record = record_from_file
     new_record = MarcRecord(pymarc_record)
     new_string = GoldRush(new_record)

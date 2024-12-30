@@ -1,12 +1,15 @@
+import pytest
 from pymarc import parse_xml_to_array, Record, Field, Subfield
 from src.marc_record import MarcRecord
 
-records = parse_xml_to_array("alma_marc_records.xml")
-record_from_file = records[0]
+
+@pytest.fixture
+def all_records():
+    return parse_xml_to_array("alma_marc_records.xml")
 
 
-def test_potentially_empty_fields():
-    for record in records:
+def test_potentially_empty_fields(all_records):
+    for record in all_records:
         new_record = MarcRecord(record)
         new_record.to_dictionary()
 
@@ -398,7 +401,9 @@ def test_meeting_name_author():
             subfields=[
                 Subfield(
                     code="a",
+                    # pylint: disable=line-too-long
                     value="Colloque Voyages et conscience patrimoniale, Aubin-Louis Millin (1759-1818) entre France et Italie ",
+                    # pylint: enable=line-too-long
                 )
             ],
         )
@@ -406,7 +411,9 @@ def test_meeting_name_author():
     new_record = MarcRecord(pymarc_record)
     assert (
         (new_record.author())
+        # pylint: disable=line-too-long
         == "Colloque Voyages et conscience patrimoniale, Aubin-Louis Millin (1759-1818) entre France et Italie"
+        # pylint: enable=line-too-long
     )
 
 
