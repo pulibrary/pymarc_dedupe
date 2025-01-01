@@ -1,17 +1,6 @@
-import pytest
-from pymarc import parse_xml_to_array, Record, Field, Subfield
+from pymarc import Record, Field, Subfield
 from src.marc_record import MarcRecord
 from src.gold_rush import GoldRush
-
-
-@pytest.fixture
-def all_records():
-    return parse_xml_to_array("alma_marc_records.xml")
-
-
-@pytest.fixture
-def record_from_file(all_records: list):
-    return all_records[0]
 
 
 def test_potentially_empty_fields(all_records):
@@ -87,38 +76,16 @@ def test_title():
     ) == "shorttitle____________________________________________________________"
 
 
-def test_long_title():
-    pymarc_record = Record()
-    pymarc_record.add_field(
-        Field(
-            tag="245",
-            subfields=[
-                Subfield(code="a", value="Science :"),
-                Subfield(code="b", value="a poem dedicated etc. : and so forth /"),
-                Subfield(code="p", value="Labor unions"),
-                Subfield(code="p", value="Supplement"),
-            ],
-        )
-    )
-    new_record = MarcRecord(pymarc_record)
+def test_long_title(record_with_title_and_subfield_p):
+    new_record = MarcRecord(record_with_title_and_subfield_p)
     new_string = GoldRush(new_record)
     assert (
         new_string.title()
     ) == "scienceapoemdedicatedetcandsoforthlaborunions_________________________"
 
 
-def test_pagination():
-    pymarc_record = Record()
-    pymarc_record.add_field(
-        Field(
-            tag="300",
-            subfields=[
-                Subfield(code="a", value="578 p. ; "),
-                Subfield(code="c", value="27 cm"),
-            ],
-        )
-    )
-    new_record = MarcRecord(pymarc_record)
+def test_pagination(record_with_description):
+    new_record = MarcRecord(record_with_description)
     new_string = GoldRush(new_record)
     assert (new_string.pagination()) == "578_"
 

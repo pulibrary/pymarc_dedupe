@@ -24,28 +24,28 @@ class MarcRecord:
         }
 
     def title(self):
-        if self.vernacular_title_field():
-            title_field = self.vernacular_title_field()
+        if self.__vernacular_title_field():
+            title_field = self.__vernacular_title_field()
         else:
-            title_field = self.title_from_245()
+            title_field = self.__title_from_245()
         try:
             subfield_a = str(title_field.get("a") or "")
             subfield_b = str(title_field.get("b") or "")
             subfield_p = str(title_field.get("p") or "")
             title = " ".join([subfield_a, subfield_b, subfield_p])
-            title = self.strip_ending_punctuation(title)
+            title = self.__strip_ending_punctuation(title)
             return title
         except (KeyError, AttributeError):
             return None
 
-    def title_from_245(self):
+    def __title_from_245(self):
         try:
             title = self.record["245"]
             return title
         except KeyError:
             return None
 
-    def vernacular_title_field(self):
+    def __vernacular_title_field(self):
         try:
             return self.record.get_linked_fields(self.record["245"])[0]
         except (KeyError, IndexError):
@@ -70,13 +70,13 @@ class MarcRecord:
 
     def pagination(self):
         try:
-            return self.normalize_extent(self.record["300"].get("a"))
+            return self.__normalize_extent(self.record["300"].get("a"))
         except KeyError:
             return None
 
     def edition(self):
         try:
-            return self.normalize_edition(self.record["250"].get("a"))
+            return self.__normalize_edition(self.record["250"].get("a"))
         except KeyError:
             return None
 
@@ -88,32 +88,32 @@ class MarcRecord:
                 pub = self.record["260"]["b"]
             except KeyError:
                 return None
-        return self.strip_punctuation(pub)
+        return self.__strip_punctuation(pub)
 
     def type_of(self):
         return self.record.leader.type_of_record
 
     def title_part(self):
         parts = self.record["245"].get_subfields("p")[1:]
-        return self.strip_punctuation(" ".join(parts))
+        return self.__strip_punctuation(" ".join(parts))
 
     def title_number(self):
         num = self.record["245"].get("n")
         if num:
-            return self.strip_punctuation(num)
+            return self.__strip_punctuation(num)
         return None
 
     def author(self):
-        if self.vernacular_author_field():
-            author_field = self.vernacular_author_field()
+        if self.__vernacular_author_field():
+            author_field = self.__vernacular_author_field()
         else:
-            author_field = self.author_from_1xx()
+            author_field = self.__author_from_1xx()
 
         if author_field:
-            return self.strip_ending_punctuation(author_field.get("a"))
+            return self.__strip_ending_punctuation(author_field.get("a"))
         return None
 
-    def author_from_1xx(self):
+    def __author_from_1xx(self):
         try:
             return self.record["100"]
         except KeyError:
@@ -125,7 +125,7 @@ class MarcRecord:
                 except KeyError:
                     return None
 
-    def vernacular_author_field(self):
+    def __vernacular_author_field(self):
         try:
             return self.record.get_linked_fields(self.record["100"])[0]
         except (KeyError, IndexError):
@@ -140,7 +140,7 @@ class MarcRecord:
     def title_inclusive_dates(self):
         date = self.record["245"].get("f")
         if date:
-            return self.strip_punctuation(date)
+            return self.__strip_punctuation(date)
         return None
 
     def gov_doc_number(self):
@@ -151,19 +151,19 @@ class MarcRecord:
 
     def is_electronic_resource(self):
         return bool(
-            self.is_electronic_resource_from_title()
-            or self.is_electronic_resource_from_reproduction()
-            or self.is_electronic_resource_from_description()
-            or self.is_electronic_resource_from_007()
+            self.__is_electronic_resource_from_title()
+            or self.__is_electronic_resource_from_reproduction()
+            or self.__is_electronic_resource_from_description()
+            or self.__is_electronic_resource_from_007()
         )
 
-    def is_electronic_resource_from_title(self):
+    def __is_electronic_resource_from_title(self):
         try:
             return self.record["245"].get("h") == "[electronic resource]"
         except KeyError:
             return False
 
-    def is_electronic_resource_from_reproduction(self):
+    def __is_electronic_resource_from_reproduction(self):
         try:
             return re.match(
                 "electronic reproduction", self.record["533"].get("a"), re.IGNORECASE
@@ -171,7 +171,7 @@ class MarcRecord:
         except KeyError:
             return False
 
-    def is_electronic_resource_from_description(self):
+    def __is_electronic_resource_from_description(self):
         try:
             return bool(
                 re.search("online resource", self.record["300"].get("a"), re.IGNORECASE)
@@ -179,19 +179,19 @@ class MarcRecord:
         except KeyError:
             return False
 
-    def is_electronic_resource_from_007(self):
+    def __is_electronic_resource_from_007(self):
         try:
             return bool(self.record["007"].data[0] == "c")
         except KeyError:
             return False
 
-    def normalize_edition(self, edition):
+    def __normalize_edition(self, edition):
         edition_mapping = {"Ed.": "Edition", "ed.": "edition"}
         for key, value in edition_mapping.items():
             edition = re.sub(key, value, edition)
-        return self.strip_punctuation(edition)
+        return self.__strip_punctuation(edition)
 
-    def normalize_extent(self, extent):
+    def __normalize_extent(self, extent):
         extent_mapping = {
             r"p\.": "pages",
             r"v\.": "volumes",
@@ -200,13 +200,13 @@ class MarcRecord:
         }
         for key, value in extent_mapping.items():
             extent = re.sub(key, value, extent)
-        return self.strip_punctuation(extent)
+        return self.__strip_punctuation(extent)
 
-    def strip_ending_punctuation(self, some_string):
+    def __strip_ending_punctuation(self, some_string):
         punctuation_to_strip = string.punctuation.replace(")", "")
         return some_string.strip(punctuation_to_strip + " ")
 
-    def strip_punctuation(self, some_string):
+    def __strip_punctuation(self, some_string):
         punctuation_to_strip = string.punctuation.replace("&", "")
         some_string = some_string.translate(str.maketrans("", "", punctuation_to_strip))
         some_string = re.sub("  ", " ", some_string).strip()
@@ -256,7 +256,7 @@ class MarcRecord:
 
     def as_date(self, date_string):
         # Remove punctuation (for 260 and 264 fields)
-        date_string = self.strip_punctuation(date_string)
+        date_string = self.__strip_punctuation(date_string)
         if self.is_valid_date(date_string):
             return int(date_string)
         return None

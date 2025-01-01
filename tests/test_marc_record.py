@@ -1,11 +1,5 @@
-import pytest
-from pymarc import parse_xml_to_array, Record, Field, Subfield
+from pymarc import Record, Field, Subfield
 from src.marc_record import MarcRecord
-
-
-@pytest.fixture
-def all_records():
-    return parse_xml_to_array("alma_marc_records.xml")
 
 
 def test_potentially_empty_fields(all_records):
@@ -126,20 +120,8 @@ def test_is_valid_date_only_spaces():
     assert not new_record.is_valid_date("    ")
 
 
-def test_title():
-    pymarc_record = Record()
-    pymarc_record.add_field(
-        Field(
-            tag="245",
-            subfields=[
-                Subfield(code="a", value="Science :"),
-                Subfield(code="b", value="a poem dedicated etc. : and so forth"),
-                Subfield(code="p", value="Labor unions"),
-                Subfield(code="p", value="Supplement /"),
-            ],
-        )
-    )
-    new_record = MarcRecord(pymarc_record)
+def test_title(record_with_title_and_subfield_p):
+    new_record = MarcRecord(record_with_title_and_subfield_p)
     assert (
         new_record.title()
     ) == "Science : a poem dedicated etc. : and so forth Labor unions"
@@ -151,11 +133,13 @@ def test_empty_title():
     assert (new_record.title()) is None
 
 
+# pylint: disable=duplicate-code
 def test_vernacular_title():
     pymarc_record = Record()
     pymarc_record.add_field(
         Field(
             tag="245",
+            # pylint: enable=duplicate-code
             subfields=[
                 Subfield(code="6", value="880-01"),
                 Subfield(code="a", value="Xin shi san bai shou bai nian xin bian / "),
@@ -187,66 +171,47 @@ def test_vernacular_title():
     assert (new_record.title()) == "新诗三百首百年新编"
 
 
-def test_title_no_subfield_p():
-    pymarc_record = Record()
-    pymarc_record.add_field(
-        Field(
-            tag="245",
-            subfields=[
-                Subfield(code="a", value="Science :"),
-                Subfield(code="b", value="a poem dedicated etc. : and so forth /"),
-            ],
-        )
-    )
-    new_record = MarcRecord(pymarc_record)
+def test_title_no_subfield_p(record_with_title):
+    new_record = MarcRecord(record_with_title)
     assert (new_record.title()) == "Science : a poem dedicated etc. : and so forth"
 
 
+# pylint: disable=protected-access
 def test_strip_punctuation():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    assert (new_record.strip_punctuation("My : fake title ")) == "My fake title"
+    assert (
+        new_record._MarcRecord__strip_punctuation("My : fake title ")
+    ) == "My fake title"
 
 
-def test_pagination():
-    pymarc_record = Record()
-    pymarc_record.add_field(
-        Field(
-            tag="300",
-            subfields=[
-                Subfield(code="a", value="578 pages ; "),
-                Subfield(code="c", value="27 cm"),
-            ],
-        )
-    )
-    new_record = MarcRecord(pymarc_record)
+# pylint: enable=protected-access
+
+
+def test_pagination(record_with_description):
+    record_with_description["300"]["a"] = "578 pages ; "
+    new_record = MarcRecord(record_with_description)
     assert (new_record.pagination()) == "578 pages"
 
 
-def test_normalize_pagination():
-    pymarc_record = Record()
-    pymarc_record.add_field(
-        Field(
-            tag="300",
-            subfields=[
-                Subfield(code="a", value="578 p. ; "),
-                Subfield(code="c", value="27 cm"),
-            ],
-        )
-    )
-    new_record = MarcRecord(pymarc_record)
+def test_normalize_pagination(record_with_description):
+    new_record = MarcRecord(record_with_description)
     assert (new_record.pagination()) == "578 pages"
 
 
+# pylint: disable=protected-access
 def test_normalize_extent():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    assert (new_record.normalize_extent("57 p. ; ")) == "57 pages"
-    assert (new_record.normalize_extent("57 pages ; ")) == "57 pages"
-    assert (new_record.normalize_extent("3 v. ; ")) == "3 volumes"
-    assert (new_record.normalize_extent("3 volumes ; ")) == "3 volumes"
-    assert (new_record.normalize_extent("3 vol. ; ")) == "3 volumes"
-    assert (new_record.normalize_extent("4 ℓ.")) == "4 leaves"
+    assert (new_record._MarcRecord__normalize_extent("57 p. ; ")) == "57 pages"
+    assert (new_record._MarcRecord__normalize_extent("57 pages ; ")) == "57 pages"
+    assert (new_record._MarcRecord__normalize_extent("3 v. ; ")) == "3 volumes"
+    assert (new_record._MarcRecord__normalize_extent("3 volumes ; ")) == "3 volumes"
+    assert (new_record._MarcRecord__normalize_extent("3 vol. ; ")) == "3 volumes"
+    assert (new_record._MarcRecord__normalize_extent("4 ℓ.")) == "4 leaves"
+
+
+# pylint: enable=protected-access
 
 
 def test_edition_statement():
@@ -294,36 +259,17 @@ def test_type_of():
     assert (new_record.type_of()) == "a"
 
 
-def test_title_part():
-    pymarc_record = Record()
-    pymarc_record.add_field(
-        Field(
-            tag="245",
-            subfields=[
-                Subfield(code="a", value="Science :"),
-                Subfield(code="b", value="a poem dedicated etc. : and so forth /"),
-                Subfield(code="p", value="Labor unions"),
-                Subfield(code="p", value="Supplement"),
-                Subfield(code="p", value="Another subpart / "),
-            ],
-        )
+def test_title_part(record_with_title_and_subfield_p):
+    record_with_title_and_subfield_p["245"].add_subfield(
+        code="p", value="Another subpart / "
     )
-    new_record = MarcRecord(pymarc_record)
+    new_record = MarcRecord(record_with_title_and_subfield_p)
     assert (new_record.title_part()) == "Supplement Another subpart"
 
 
-def test_title_number():
-    pymarc_record = Record()
-    pymarc_record.add_field(
-        Field(
-            tag="245",
-            subfields=[
-                Subfield(code="a", value="Science :"),
-                Subfield(code="n", value="Book 1 : "),
-            ],
-        )
-    )
-    new_record = MarcRecord(pymarc_record)
+def test_title_number(record_with_short_title):
+    record_with_short_title["245"].add_subfield(code="n", value="Book 1 : ")
+    new_record = MarcRecord(record_with_short_title)
     assert (new_record.title_number()) == "Book 1"
 
 
@@ -435,6 +381,7 @@ def test_gov_doc_number():
     assert (new_record.gov_doc_number()) == "HP40-71/2012F-PDF"
 
 
+# pylint: disable=protected-access
 def test_is_electronic_resource_245():
     pymarc_record = Record()
     pymarc_record.add_field(
@@ -455,18 +402,11 @@ def test_is_electronic_resource_reproduction():
     assert new_record.is_electronic_resource()
 
 
-def test_is_electronic_resource_description():
-    pymarc_record = Record()
-    pymarc_record.add_field(
-        Field(
-            tag="300",
-            subfields=[
-                Subfield(code="a", value="1 online resource (iii, 447 pages) : ")
-            ],
-        )
-    )
-    new_record = MarcRecord(pymarc_record)
-    assert new_record.is_electronic_resource_from_description()
+def test_is_electronic_resource_description(record_with_description):
+    record_with_description["300"]["a"] = "1 online resource (iii, 447 pages) : "
+    record_with_description["300"].delete_subfield("c")
+    new_record = MarcRecord(record_with_description)
+    assert new_record._MarcRecord__is_electronic_resource_from_description()
     assert new_record.is_electronic_resource()
 
 
@@ -474,7 +414,7 @@ def test_is_electronic_resource_from_007_c():
     pymarc_record = Record()
     pymarc_record.add_field(Field(tag="007", data="c"))
     new_record = MarcRecord(pymarc_record)
-    assert new_record.is_electronic_resource_from_007()
+    assert new_record._MarcRecord__is_electronic_resource_from_007()
     assert new_record.is_electronic_resource()
 
 
@@ -482,15 +422,18 @@ def test_is_electronic_resource_from_007_d():
     pymarc_record = Record()
     pymarc_record.add_field(Field(tag="007", data="d"))
     new_record = MarcRecord(pymarc_record)
-    assert not new_record.is_electronic_resource_from_007()
+    assert not new_record._MarcRecord__is_electronic_resource_from_007()
     assert not new_record.is_electronic_resource()
 
 
 def test_is_electronic_resource_when_not_e():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    assert not new_record.is_electronic_resource_from_title()
-    assert not new_record.is_electronic_resource_from_reproduction()
-    assert not new_record.is_electronic_resource_from_description()
-    assert not new_record.is_electronic_resource_from_007()
+    assert not new_record._MarcRecord__is_electronic_resource_from_title()
+    assert not new_record._MarcRecord__is_electronic_resource_from_reproduction()
+    assert not new_record._MarcRecord__is_electronic_resource_from_description()
+    assert not new_record._MarcRecord__is_electronic_resource_from_007()
     assert not new_record.is_electronic_resource()
+
+
+# pylint: enable=protected-access
