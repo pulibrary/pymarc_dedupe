@@ -12,13 +12,17 @@ jobs:
       - checkout
       - run:
           name: "Install requirements"
-          command: "pip install -r requirements/linting.txt"
+          command: "pip install -r requirements/testing.txt"
       - run:
           name: 'python: ruff format'
           command: ruff format . --check
       - run:
-          name: 'python ruff check'
+          name: 'python: ruff check'
           command: ruff check .
+      # Currently excluding checks for documentation - remove these disables once this is remediated
+      - run:
+          name: 'python: pylint'
+          command: pylint src tests --disable=C0114,C0115,C0116
   tests:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job

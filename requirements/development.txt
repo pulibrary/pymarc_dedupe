@@ -1,3 +1,2 @@
 -r common.txt
--r linting.txt
 -r testing.txt
