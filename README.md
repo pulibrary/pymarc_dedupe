@@ -1,5 +1,7 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/pulibrary/pymarc_dedupe/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/pulibrary/pymarc_dedupe/tree/main)
 [![Coverage Status](https://coveralls.io/repos/github/pulibrary/pymarc_dedupe/badge.svg?branch=main)](https://coveralls.io/github/pulibrary/pymarc_dedupe?branch=main)
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pulibrary/pymarc_dedupe)
+
 
 The purpose of this code is to provide consistent Marc record parsing for deduplication, in order to compare how humans, a machine learning deduplication algorithm, and an implementation of the GoldRush algorithm deduplicate Marc records.
 
@@ -39,7 +41,7 @@ python3 -m venv .venv
 
 3. install dependencies
 ```bash
-pip install -r requirements.txt
+pip install -r requirements/development.txt
 ```
 
 ### Testing
@@ -50,4 +52,20 @@ pip install -U pytest
 2. Run tests
 ```bash
 pytest
+```
+
+### Linting
+1. ruff - fast
+  - Formatter - `--check` flag does not make changes. Run without `--check` flag for automatic fixing
+  ```bash
+  ruff format . --check
+  ```
+  - Linter
+  ```bash
+  ruff check .
+  ```
+2. pylint - slower, does more in-depth checks
+  - Currently excluding checks for documentation - remove these disables once this is remediated
+```bash
+pylint src tests --disable=C0114,C0115,C0116
 ```
