@@ -27,6 +27,42 @@ To this end, there will be much more strict string normalization in this layer. 
     - This also seems like it duplicates the 245 second indicator for non-filing characters
   - Replacing '&' with 'and'
 
+## Using the code
+This obviously needs to be refined
+
+1. Start python interactive interpreter
+```bash
+python
+```
+2. Import needed libraries
+```python
+from pymarc import parse_xml_to_array
+from src.marc_record import MarcRecord
+from src.gold_rush import GoldRush
+```
+3. Create an object with example marc records from marc xml
+```python
+all_records = parse_xml_to_array("alma_marc_records.xml")
+```
+4. Create a dictionary of an example record
+```python
+new_record = MarcRecord(all_records[0])
+new_record.to_dictionary()
+```
+5. Create a GoldRush string of an example record
+```python
+gr = GoldRush(new_record)
+gr.as_gold_rush()
+```
+
+6. create list of GoldRush strings
+```python
+list_of_records = []
+for record in all_records:
+  mr = MarcRecord(record)
+  gr = GoldRush(mr)
+  list_of_records.append(gr.as_gold_rush())
+```
 
 ## Developing this application
 ### Set-up and install dependencies
