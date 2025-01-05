@@ -140,7 +140,7 @@ class MarcRecord:
     def title_inclusive_dates(self):
         date = self.record["245"].get("f")
         if date:
-            return self.__strip_punctuation(date)
+            return self.__strip_ending_punctuation(date)
         return None
 
     def gov_doc_number(self):

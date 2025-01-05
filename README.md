@@ -45,11 +45,6 @@ pip install -r requirements/development.txt
 ```
 
 ### Testing
-1. Install pytest
-```bash
-pip install -U pytest
-```
-2. Run tests
 ```bash
 pytest
 ```
