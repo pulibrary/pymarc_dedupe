@@ -15,6 +15,10 @@ class GoldRush:
             + self.marc_record.type_of()
             + self.title_part()
             + self.title_number()
+            + self.title_inclusive_dates()
+            + self.author()
+            + self.gov_doc_number()
+            + self.format_character()
         )
 
     def title(self):
@@ -61,6 +65,26 @@ class GoldRush:
     def title_number(self):
         title_number = self.marc_record.title_number() or ""
         return title_number.ljust(10, "_")[0:10]
+
+    def title_inclusive_dates(self):
+        title_dates = self.marc_record.title_inclusive_dates() or ""
+        title_dates = self.strip_punctuation(title_dates)
+        return title_dates.ljust(15, "_")[0:15]
+
+    def author(self):
+        author = self.marc_record.author() or ""
+        author = self.strip_punctuation(author)
+        return author.ljust(5, "_")[0:5]
+
+    def gov_doc_number(self):
+        gov_doc_number = self.marc_record.gov_doc_number() or ""
+        gov_doc_number = self.strip_punctuation(gov_doc_number)
+        return gov_doc_number.ljust(15, "_")[0:15]
+
+    def format_character(self):
+        if self.marc_record.is_electronic_resource():
+            return "e"
+        return "p"
 
     def edition_dictionary(self):
         return {

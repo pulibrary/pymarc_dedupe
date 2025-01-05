@@ -17,7 +17,7 @@ def test_as_gold_rush(record_from_file):
     assert (
         (new_string.as_gold_rush())
         # pylint: disable=line-too-long
-        == "scienceapoemdedicatedtotheamericanassociationfortheadvancementofscienc18561______vanbea________________________________________"
+        == "scienceapoemdedicatedtotheamericanassociationfortheadvancementofscienc18561______vanbea_______________________________________________________stree_______________e"
         # pylint: enable=line-too-long
     )
 
@@ -25,6 +25,13 @@ def test_as_gold_rush(record_from_file):
 def test_as_gold_rush_their_example():
     pymarc_record = Record(leader="03377cam a22006134i 4500")
     pymarc_record.add_field(
+        Field(
+            tag="100",
+            subfields=[
+                Subfield(code="a", value="Snyder, Timothy, "),
+                Subfield(code="e", value="author."),
+            ],
+        ),
         Field(
             tag="245",
             subfields=[
@@ -59,7 +66,7 @@ def test_as_gold_rush_their_example():
     assert (
         (new_string.as_gold_rush())
         # pylint: disable=line-too-long
-        == "ontyrannytwentylessonsfromthetwentiethcentury_________________________2017126_1__timdua________________________________________"
+        == "ontyrannytwentylessonsfromthetwentiethcentury_________________________2017126_1__timdua_______________________________________________________snyde_______________p"
         # pylint: enable=line-too-long
     )  # snyde_______________p'
 
@@ -134,3 +141,31 @@ def test_strip_punctuation():
     assert (new_string.strip_punctuation("!()\\-©")) == "______"
     assert (new_string.strip_punctuation("  and  Another ")) == "and_another"
     assert (new_string.strip_punctuation("The Title ")) == "title"
+
+
+def test_title_inclusive_dates():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(
+            tag="245",
+            subfields=[Subfield(code="f", value="1903 Sept. 16-1907 Oct. 5.")],
+        )
+    )
+    new_record = MarcRecord(pymarc_record)
+    new_string = GoldRush(new_record)
+    assert (new_string.title_inclusive_dates()) == "1903_sept__16_1"
+
+
+def test_author():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(
+            tag="100",
+            subfields=[
+                Subfield(code="a", value="Jacquet de La Guerre, Elisabeth-Claude, ")
+            ],
+        )
+    )
+    new_record = MarcRecord(pymarc_record)
+    new_string = GoldRush(new_record)
+    assert (new_string.author()) == "jacqu"

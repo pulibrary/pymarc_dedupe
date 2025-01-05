@@ -366,10 +366,13 @@ def test_meeting_name_author():
 def test_title_inclusive_dates():
     pymarc_record = Record()
     pymarc_record.add_field(
-        Field(tag="245", subfields=[Subfield(code="f", value="1901 March 6, ")])
+        Field(
+            tag="245",
+            subfields=[Subfield(code="f", value="1903 Sept. 16-1907 Oct. 5.")],
+        )
     )
     new_record = MarcRecord(pymarc_record)
-    assert (new_record.title_inclusive_dates()) == "1901 March 6"
+    assert (new_record.title_inclusive_dates()) == "1903 Sept. 16-1907 Oct. 5"
 
 
 def test_gov_doc_number():
