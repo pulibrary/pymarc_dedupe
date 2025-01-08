@@ -4,7 +4,7 @@ from pymarc import parse_xml_to_array, Record, Field, Subfield
 
 @pytest.fixture(scope="session", name="all_records")
 def fixture_all_records():
-    return parse_xml_to_array("alma_marc_records.xml")
+    return parse_xml_to_array("tests/alma_marc_records.xml")
 
 
 @pytest.fixture(name="record_from_file")
