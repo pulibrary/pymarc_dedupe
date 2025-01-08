@@ -42,7 +42,7 @@ from src.gold_rush import GoldRush
 ```
 3. Create an object with example marc records from marc xml
 ```python
-all_records = parse_xml_to_array("alma_marc_records.xml")
+all_records = parse_xml_to_array("tests/alma_marc_records.xml")
 ```
 4. Create a dictionary of an example record
 ```python
