@@ -1,5 +1,6 @@
 import string
 import re
+from src.gold_rush import GoldRush
 
 
 class MarcRecord:
@@ -9,6 +10,7 @@ class MarcRecord:
     def to_dictionary(self):
         """Takes a MarcRecord and returns a dictionary including the most salient fields"""
         return {
+            "id": self.id(),
             "title": self.title(),
             "publication_year": self.publication_year(),
             "pagination": self.pagination(),
@@ -21,7 +23,11 @@ class MarcRecord:
             "title_inclusive_dates": self.title_inclusive_dates(),
             "gov_doc_number": self.gov_doc_number(),
             "is_electronic_resource": self.is_electronic_resource(),
+            "gold_rush": GoldRush(self).as_gold_rush(),
         }
+
+    def id(self):
+        return self.record.get("001").data
 
     def title(self):
         if self.__vernacular_title_field():
@@ -234,27 +240,27 @@ class MarcRecord:
 
     def date_one(self):
         date_string = self.record["008"].data[7:11]
-        return self.as_date(date_string)
+        return self.__as_date(date_string)
 
     def date_two(self):
         date_string = self.record["008"].data[11:15]
-        return self.as_date(date_string)
+        return self.__as_date(date_string)
 
     def date_of_production(self):
         try:
             date_string = self.record["264"]["c"]
         except KeyError:
             return None
-        return self.as_date(date_string)
+        return self.__as_date(date_string)
 
     def date_of_publication(self):
         try:
             date_string = self.record["260"]["c"]
         except KeyError:
             return None
-        return self.as_date(date_string)
+        return self.__as_date(date_string)
 
-    def as_date(self, date_string):
+    def __as_date(self, date_string):
         # Remove punctuation (for 260 and 264 fields)
         date_string = self.__strip_punctuation(date_string)
         if self.is_valid_date(date_string):
