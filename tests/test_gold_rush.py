@@ -104,6 +104,25 @@ def test_pagination_record(record_from_file):
     assert (new_string.pagination()) == "1___"
 
 
+def test_publisher():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(
+            tag="260", subfields=[Subfield(code="b", value="U.S. Geological Survey ;")]
+        )
+    )
+    new_record = MarcRecord(pymarc_record)
+    new_string = GoldRush(new_record)
+    assert (new_string.publisher_name()) == "usgeo"
+
+
+def test_empty_publisher():
+    pymarc_record = Record()
+    new_record = MarcRecord(pymarc_record)
+    new_string = GoldRush(new_record)
+    assert (new_string.publisher_name()) == "_____"
+
+
 def test_edition_as_gold_rush():
     pymarc_record = Record()
     pymarc_record.add_field(

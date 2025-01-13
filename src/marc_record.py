@@ -12,6 +12,7 @@ class MarcRecord:
         return {
             "id": self.id(),
             "title": self.title(),
+            "transliterated_title": self.transliterated_title(),
             "publication_year": self.publication_year(),
             "pagination": self.pagination(),
             "edition": self.edition(),
@@ -27,7 +28,10 @@ class MarcRecord:
         }
 
     def id(self):
-        return self.record.get("001").data
+        try:
+            return self.record.get("001").data
+        except (KeyError, AttributeError):
+            return ""
 
     def title(self):
         if self.__vernacular_title_field():
@@ -42,20 +46,32 @@ class MarcRecord:
             title = self.__strip_ending_punctuation(title)
             return title
         except (KeyError, AttributeError):
-            return None
+            return ""
+
+    def transliterated_title(self):
+        title_field = self.__title_from_245()
+        try:
+            subfield_a = str(title_field.get("a") or "")
+            subfield_b = str(title_field.get("b") or "")
+            subfield_p = str(title_field.get("p") or "")
+            title = " ".join([subfield_a, subfield_b, subfield_p])
+            title = self.__strip_ending_punctuation(title)
+            return title
+        except (KeyError, AttributeError):
+            return ""
 
     def __title_from_245(self):
         try:
             title = self.record["245"]
             return title
         except KeyError:
-            return None
+            return ""
 
     def __vernacular_title_field(self):
         try:
             return self.record.get_linked_fields(self.record["245"])[0]
         except (KeyError, IndexError):
-            return None
+            return ""
 
     def publication_year(self):
         pub_year = ""
@@ -63,28 +79,33 @@ class MarcRecord:
             pub_year = self.date_two()
         elif self.date_one() and not self.date_two():
             pub_year = self.date_one()
-        elif not self.date_one() and not self.date_two() and self.date_of_production():
-            pub_year = self.date_of_production()
+        elif (
+            not self.date_one() and not self.date_two() and self.__date_of_production()
+        ):
+            pub_year = self.__date_of_production()
         elif (
             not self.date_one()
             and not self.date_two()
-            and not self.date_of_production()
-            and self.date_of_publication()
+            and not self.__date_of_production()
+            and self.__date_of_publication()
         ):
-            pub_year = self.date_of_publication()
+            pub_year = self.__date_of_publication()
         return pub_year
 
     def pagination(self):
         try:
-            return self.__normalize_extent(self.record["300"].get("a"))
+            subfield_a = self.record["300"].get("a")
+            if subfield_a:
+                return self.__normalize_extent(subfield_a)
+            return ""
         except KeyError:
-            return None
+            return ""
 
     def edition(self):
         try:
             return self.__normalize_edition(self.record["250"].get("a"))
         except KeyError:
-            return None
+            return ""
 
     def publisher_name(self):
         try:
@@ -93,21 +114,27 @@ class MarcRecord:
             try:
                 pub = self.record["260"]["b"]
             except KeyError:
-                return None
+                return ""
         return self.__strip_punctuation(pub)
 
     def type_of(self):
         return self.record.leader.type_of_record
 
     def title_part(self):
-        parts = self.record["245"].get_subfields("p")[1:]
-        return self.__strip_punctuation(" ".join(parts))
+        try:
+            parts = self.record["245"].get_subfields("p")[1:]
+            return self.__strip_punctuation(" ".join(parts))
+        except KeyError:
+            return ""
 
     def title_number(self):
-        num = self.record["245"].get("n")
-        if num:
-            return self.__strip_punctuation(num)
-        return None
+        try:
+            num = self.record["245"].get("n")
+            if num:
+                return self.__strip_punctuation(num)
+            return ""
+        except KeyError:
+            return ""
 
     def author(self):
         if self.__vernacular_author_field():
@@ -117,7 +144,7 @@ class MarcRecord:
 
         if author_field:
             return self.__strip_ending_punctuation(author_field.get("a"))
-        return None
+        return ""
 
     def __author_from_1xx(self):
         try:
@@ -129,7 +156,7 @@ class MarcRecord:
                 try:
                     return self.record["111"]
                 except KeyError:
-                    return None
+                    return ""
 
     def __vernacular_author_field(self):
         try:
@@ -141,19 +168,22 @@ class MarcRecord:
                 try:
                     return self.record.get_linked_fields(self.record["111"])[0]
                 except (KeyError, IndexError):
-                    return None
+                    return ""
 
     def title_inclusive_dates(self):
-        date = self.record["245"].get("f")
-        if date:
-            return self.__strip_ending_punctuation(date)
-        return None
+        try:
+            date = self.record["245"].get("f")
+            if date:
+                return self.__strip_ending_punctuation(date)
+            return ""
+        except KeyError:
+            return ""
 
     def gov_doc_number(self):
         try:
             return self.record["086"].get("a")
         except KeyError:
-            return None
+            return ""
 
     def is_electronic_resource(self):
         return bool(
@@ -179,9 +209,10 @@ class MarcRecord:
 
     def __is_electronic_resource_from_description(self):
         try:
-            return bool(
-                re.search("online resource", self.record["300"].get("a"), re.IGNORECASE)
-            )
+            subfield_a = self.record["300"].get("a")
+            if subfield_a:
+                return bool(re.search("online resource", subfield_a, re.IGNORECASE))
+            return False
         except KeyError:
             return False
 
@@ -239,25 +270,31 @@ class MarcRecord:
             return False
 
     def date_one(self):
-        date_string = self.record["008"].data[7:11]
-        return self.__as_date(date_string)
+        try:
+            date_string = self.record["008"].data[7:11]
+            return self.__as_date(date_string)
+        except KeyError:
+            return ""
 
     def date_two(self):
-        date_string = self.record["008"].data[11:15]
-        return self.__as_date(date_string)
+        try:
+            date_string = self.record["008"].data[11:15]
+            return self.__as_date(date_string)
+        except KeyError:
+            return ""
 
-    def date_of_production(self):
+    def __date_of_production(self):
         try:
             date_string = self.record["264"]["c"]
         except KeyError:
-            return None
+            return ""
         return self.__as_date(date_string)
 
-    def date_of_publication(self):
+    def __date_of_publication(self):
         try:
             date_string = self.record["260"]["c"]
         except KeyError:
-            return None
+            return ""
         return self.__as_date(date_string)
 
     def __as_date(self, date_string):
@@ -265,4 +302,4 @@ class MarcRecord:
         date_string = self.__strip_punctuation(date_string)
         if self.is_valid_date(date_string):
             return int(date_string)
-        return None
+        return ""
