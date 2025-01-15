@@ -2,10 +2,18 @@ from pymarc import Record, Field, Subfield
 from src.marc_record import MarcRecord
 
 
-def test_potentially_empty_fields(all_records):
+def test_against_real_data(all_records):
     for record in all_records:
         new_record = MarcRecord(record)
         new_record.to_dictionary()
+
+
+def test_empty_record():
+    # We shouldn't actually get empty records, but this will tell us whether,
+    # if any one field is empty, our code will error
+    pymarc_record = Record()
+    new_record = MarcRecord(pymarc_record)
+    new_record.to_dictionary()
 
 
 def test_two_valid_dates_publication_year():
@@ -90,13 +98,14 @@ def test_date_two():
         Field(tag="008", data="020506s1856    nyu     o     000 p eng d")
     )
     new_record = MarcRecord(pymarc_record)
-    assert (new_record.date_two()) is None
+    assert (new_record.date_two()) == ""
 
 
+# pylint: disable=protected-access
 def test_date_of_production():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    assert (new_record.date_of_production()) is None
+    assert (new_record._MarcRecord__date_of_production()) == ""
 
 
 def test_date_of_publication():
@@ -105,13 +114,16 @@ def test_date_of_publication():
         Field(tag="260", subfields=[Subfield(code="c", value="1856.")])
     )
     new_record = MarcRecord(pymarc_record)
-    assert (new_record.date_of_publication()) == 1856
+    assert (new_record._MarcRecord__date_of_publication()) == 1856
 
 
 def test_empty_date_of_publication():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    assert (new_record.date_of_publication()) is None
+    assert (new_record._MarcRecord__date_of_publication()) == ""
+
+
+# pylint: enable=protected-access
 
 
 def test_is_valid_date_only_spaces():
@@ -127,10 +139,16 @@ def test_title(record_with_title_and_subfield_p):
     ) == "Science : a poem dedicated etc. : and so forth Labor unions"
 
 
+def test_empty_transliterated_title():
+    pymarc_record = Record()
+    new_record = MarcRecord(pymarc_record)
+    assert (new_record.transliterated_title()) == ""
+
+
 def test_empty_title():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    assert (new_record.title()) is None
+    assert (new_record.title()) == ""
 
 
 # pylint: disable=duplicate-code
@@ -250,7 +268,7 @@ def test_publisher_name_260():
 def test_empty_publisher_name():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    assert (new_record.publisher_name()) is None
+    assert (new_record.publisher_name()) == ""
 
 
 def test_type_of():

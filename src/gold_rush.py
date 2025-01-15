@@ -56,10 +56,13 @@ class GoldRush:
         return chars.ljust(3, "_")[0:3]
 
     def publisher_name(self):
-        publisher_name = self.marc_record.publisher_name().lower()
-        publisher_name = publisher_name.translate(
-            str.maketrans(self.title_translation_dictionary())
-        )
+        try:
+            publisher_name = self.marc_record.publisher_name().lower()
+            publisher_name = publisher_name.translate(
+                str.maketrans(self.title_translation_dictionary())
+            )
+        except AttributeError:
+            return "_____"
         return publisher_name.ljust(5, "_")[0:5]
 
     def title_number(self):
