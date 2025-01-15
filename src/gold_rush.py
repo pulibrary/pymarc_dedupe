@@ -45,24 +45,21 @@ class GoldRush:
         try:
             lowercase_ed = self.marc_record.edition().lower()
             chars = re.findall(r"\d+", lowercase_ed)[0]
-        except (TypeError, IndexError, AttributeError):
+        except (TypeError, IndexError):
             try:
                 chars = re.findall(r"\w+", lowercase_ed)[0]
                 chars = chars[0:3]
                 for ordinal, numeral in self.edition_dictionary().items():
                     chars = chars.replace(ordinal, numeral)
-            except (TypeError, IndexError, AttributeError):
+            except (TypeError, IndexError):
                 return "___"
         return chars.ljust(3, "_")[0:3]
 
     def publisher_name(self):
-        try:
-            publisher_name = self.marc_record.publisher_name().lower()
-            publisher_name = publisher_name.translate(
-                str.maketrans(self.title_translation_dictionary())
-            )
-        except AttributeError:
-            return "_____"
+        publisher_name = self.marc_record.publisher_name().lower()
+        publisher_name = publisher_name.translate(
+            str.maketrans(self.title_translation_dictionary())
+        )
         return publisher_name.ljust(5, "_")[0:5]
 
     def title_number(self):
