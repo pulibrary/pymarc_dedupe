@@ -217,6 +217,21 @@ def test_normalize_pagination(record_with_description):
     assert (new_record.pagination()) == "578 pages"
 
 
+def test_normalize_pagination_with_no_subfield_a():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(
+            tag="300",
+            subfields=[
+                Subfield(code="b", value="ill. ;"),
+                Subfield(code="c", value="27 cm"),
+            ],
+        )
+    )
+    new_record = MarcRecord(pymarc_record)
+    assert (new_record.pagination()) == ""
+
+
 # pylint: disable=protected-access
 def test_normalize_extent():
     pymarc_record = Record()
@@ -429,6 +444,13 @@ def test_is_electronic_resource_description(record_with_description):
     new_record = MarcRecord(record_with_description)
     assert new_record._MarcRecord__is_electronic_resource_from_description()
     assert new_record.is_electronic_resource()
+
+
+def test_is_electronic_resource_empty_a_description(record_with_description):
+    record_with_description["300"].delete_subfield("a")
+    new_record = MarcRecord(record_with_description)
+    assert new_record._MarcRecord__is_electronic_resource_from_description() is False
+    assert new_record.is_electronic_resource() is False
 
 
 def test_is_electronic_resource_from_007_c():
