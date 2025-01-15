@@ -5,4 +5,7 @@ __pycache__/
 
 .pytest_cache
 .venv
+
+# Ignore fixture / testing files
 marc_xml_as_csv.csv
+tests/alma_marc_records.csv
