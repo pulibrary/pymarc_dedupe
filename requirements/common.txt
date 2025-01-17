@@ -1,1 +1,3 @@
 pymarc
+dedupe
+unidecode

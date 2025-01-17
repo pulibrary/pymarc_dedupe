@@ -8,6 +8,7 @@ online stores. The task is to link products between the datasets.
 The output will be a CSV with our linked results.
 
 """
+
 import csv
 import logging
 import optparse
@@ -50,15 +51,12 @@ def readData(filename):
         reader = csv.DictReader(f)
         for i, row in enumerate(reader):
             clean_row = {k: preProcess(v) for (k, v) in row.items()}
-            if clean_row["price"]:
-                clean_row["price"] = float(clean_row["price"][1:])
             data_d[filename + str(i)] = dict(clean_row)
 
     return data_d
 
 
 if __name__ == "__main__":
-
     # ## Logging
 
     # dedupe uses Python logging to show or suppress verbose output. Added for convenience.
@@ -86,8 +84,8 @@ if __name__ == "__main__":
     settings_file = "data_matching_learned_settings"
     training_file = "data_matching_training.json"
 
-    left_file = "AbtBuy_Abt.csv"
-    right_file = "AbtBuy_Buy.csv"
+    left_file = "alma_starting_with_zu.csv"
+    right_file = "hul_full_362.csv"
 
     print("importing data ...")
     data_1 = readData(left_file)
@@ -109,11 +107,14 @@ if __name__ == "__main__":
         # Define the fields the linker will pay attention to
         fields = [
             dedupe.variables.String("title"),
-            dedupe.variables.Text("title"),
-            dedupe.variables.Text(
-                "description", corpus=descriptions(), has_missing=True
-            ),
-            dedupe.variables.Price("price", has_missing=True),
+            dedupe.variables.String("author"),
+            dedupe.variables.String("publication_year"),
+            dedupe.variables.String("pagination"),
+            dedupe.variables.Exists("edition"),
+            dedupe.variables.String("edition"),
+            dedupe.variables.String("publisher_name"),
+            dedupe.variables.Exact("type_of"),
+            dedupe.variables.Exact("is_electronic_resource"),
         ]
 
         # Create a new linker object and pass our data model to it.
@@ -165,7 +166,7 @@ if __name__ == "__main__":
     # this function but a representative sample.
 
     print("clustering...")
-    linked_records = linker.join(data_1, data_2, 0.0)
+    linked_records = linker.join(data_1, data_2, 0.3, "many-to-many")
 
     print("# duplicate sets", len(linked_records))
     # ## Writing Results
@@ -182,7 +183,6 @@ if __name__ == "__main__":
             }
 
     with open(output_file, "w") as f:
-
         header_unwritten = True
 
         for fileno, filename in enumerate((left_file, right_file)):
@@ -190,7 +190,6 @@ if __name__ == "__main__":
                 reader = csv.DictReader(f_input)
 
                 if header_unwritten:
-
                     fieldnames = [
                         "Cluster ID",
                         "Link Score",
@@ -203,7 +202,6 @@ if __name__ == "__main__":
                     header_unwritten = False
 
                 for row_id, row in enumerate(reader):
-
                     record_id = filename + str(row_id)
                     cluster_details = cluster_membership.get(record_id, {})
                     row["source file"] = fileno
