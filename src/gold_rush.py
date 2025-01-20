@@ -1,4 +1,5 @@
 import re
+from unidecode import unidecode
 
 
 class GoldRush:
@@ -23,22 +24,22 @@ class GoldRush:
 
     def title(self):
         some_string = self.normalize_title(self.marc_record.title())
-        some_string = some_string.ljust(70, "_")
-        return some_string[0:70]
+        return self.pad(some_string, 70)
 
     def title_part(self):
         some_string = self.normalize_title(self.marc_record.title_part())
-        return some_string.ljust(30, "_")[0:30]
+        return self.pad(some_string, 30)
 
     def publication_year(self):
-        return str(self.marc_record.publication_year() or "")
+        some_string = str(self.marc_record.publication_year()) or ""
+        return self.pad(some_string, 4)
 
     def pagination(self):
         try:
             nums = re.findall(r"\d+", self.marc_record.pagination())[0]
-            return nums.ljust(4, "_")[0:4]
         except (TypeError, IndexError):
-            return "____"
+            nums = ""
+        return self.pad(nums, 4)
 
     def edition(self):
         lowercase_ed = ""
@@ -52,34 +53,34 @@ class GoldRush:
                 for ordinal, numeral in self.edition_dictionary().items():
                     chars = chars.replace(ordinal, numeral)
             except (TypeError, IndexError):
-                return "___"
-        return chars.ljust(3, "_")[0:3]
+                chars = ""
+        return unidecode(self.pad(chars, 3))
 
     def publisher_name(self):
         publisher_name = self.marc_record.publisher_name().lower()
         publisher_name = publisher_name.translate(
             str.maketrans(self.title_translation_dictionary())
         )
-        return publisher_name.ljust(5, "_")[0:5]
+        return self.pad(publisher_name, 5)
 
     def title_number(self):
         title_number = self.marc_record.title_number() or ""
-        return title_number.ljust(10, "_")[0:10]
+        return self.pad(title_number, 10)
 
     def title_inclusive_dates(self):
         title_dates = self.marc_record.title_inclusive_dates() or ""
         title_dates = self.strip_punctuation(title_dates)
-        return title_dates.ljust(15, "_")[0:15]
+        return self.pad(title_dates, 15)
 
     def author(self):
         author = self.marc_record.author() or ""
         author = self.strip_punctuation(author)
-        return author.ljust(5, "_")[0:5]
+        return self.pad(author, 5)
 
     def gov_doc_number(self):
         gov_doc_number = self.marc_record.gov_doc_number() or ""
         gov_doc_number = self.strip_punctuation(gov_doc_number)
-        return gov_doc_number.ljust(15, "_")[0:15]
+        return self.pad(gov_doc_number, 15)
 
     def format_character(self):
         if self.marc_record.is_electronic_resource():
@@ -109,7 +110,7 @@ class GoldRush:
         some_string = some_string.translate(
             str.maketrans(self.title_translation_dictionary())
         )
-        return some_string
+        return unidecode(some_string)
 
     def title_translation_dictionary(self):
         return {
@@ -148,13 +149,16 @@ class GoldRush:
             "©": "",
         }
 
+    def pad(self, string, length):
+        return string.ljust(length, "_")[0:length]
+
     def strip_punctuation(self, some_string):
         some_string = re.sub("  ", " ", some_string).strip().lower()
         some_string = re.sub("^the +", "", some_string)
         some_string = some_string.translate(
             str.maketrans(self.translation_dictionary())
         )
-        return some_string
+        return unidecode(some_string)
 
     def translation_dictionary(self):
         return {

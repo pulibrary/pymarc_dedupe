@@ -150,6 +150,48 @@ def test_empty_edition_as_gold_rush():
     assert (new_string.edition()) == "___"
 
 
+def test_remove_decomposed_diacritics():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(
+            tag="245",
+            subfields=[
+                Subfield(
+                    code="a",
+                    value="Zu einer Zeit, als Bäume und Gräser noch sprechen konnten",
+                )
+            ],
+        )
+    )
+    new_record = MarcRecord(pymarc_record)
+    new_string = GoldRush(new_record)
+    assert (
+        new_string.title()
+        == "zueinerzeitalsbaumeundgrasernochsprechenkonnten_______________________"
+    )
+
+
+def test_remove_composed_diacritics():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(
+            tag="245",
+            subfields=[
+                Subfield(
+                    code="a",
+                    value="Zu einer Zeit, als Bäume und Gräser noch sprechen konnten",
+                )
+            ],
+        )
+    )
+    new_record = MarcRecord(pymarc_record)
+    new_string = GoldRush(new_record)
+    assert (
+        new_string.title()
+        == "zueinerzeitalsbaumeundgrasernochsprechenkonnten_______________________"
+    )
+
+
 def test_strip_punctuation():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
