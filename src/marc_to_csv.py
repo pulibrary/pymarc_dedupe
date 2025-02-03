@@ -9,7 +9,6 @@ class MarcToCsv:
         self.input_file_path = input_file_path
 
     def to_csv(self):
-        # filename, _file_extension = os.path.splitext(self.input_file_path)
         output_file = self.csv_path()
         with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
             fieldnames = self.records()[0].keys()

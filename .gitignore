@@ -9,4 +9,5 @@ __pycache__/
 # Ignore fixture / testing files
 marc_xml_as_csv.csv
 tests/alma_marc_records.csv
+tests/test_outputs/*
 experiments_files_and_output/*
