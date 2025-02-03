@@ -21,7 +21,15 @@ class LinkRecordsFile:
         with open(self.csv_path, encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for i, row in enumerate(reader):
-                # clean_row = {k: v for (k, v) in row.items()}
-                data_d[self.csv_path + str(i)] = dict(row)
+                clean_row = {k: self.pre_process(v) for (k, v) in row.items()}
+                data_d[self.csv_path + str(i)] = dict(clean_row)
 
         return data_d
+
+    def pre_process(self, val):
+        """
+        Replace empty values with None
+        """
+        if not val:
+            val = None
+        return val
