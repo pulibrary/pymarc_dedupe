@@ -29,18 +29,18 @@ def test_comparing_two_sets_of_records(mocker):
     left_file = "tests/alma_marc_records_short.xml"
     right_file = "tests/hl_marc_records_short.xml"
     output_directory = "tests/test_outputs"
-    linker = LinkRecords(left_file, right_file, output_directory)
     # delete any previous test files
     files = [
-        linker.settings_file_path,
-        linker.output_file_path,
-        linker.training_file_path,
+        "tests/test_outputs/data_matching_learned_settings"
+        "tests/test_outputs/data_matching_output.csv",
+        "tests/test_outputs/data_matching_training.json",
     ]
     for file in files:
         try:
             os.remove(file)
         except FileNotFoundError:
             pass
+    linker = LinkRecords(left_file, right_file, output_directory)
     linker.fields()
     linker.linker()
 
