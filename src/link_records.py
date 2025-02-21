@@ -35,6 +35,7 @@ class LinkRecords:
             dedupe.variables.Exact("is_electronic_resource"),
         ]
 
+    # This method really needs to be broken up
     def linker(self):
         try:
             with open(self.settings_file_path, "rb") as sf:
