@@ -9,8 +9,7 @@ class MarcToCsv:
         self.input_file_path = input_file_path
 
     def to_csv(self):
-        filename, _file_extension = os.path.splitext(self.input_file_path)
-        output_file = filename + ".csv"
+        output_file = self.csv_path()
         with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
             fieldnames = self.records()[0].keys()
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -27,3 +26,8 @@ class MarcToCsv:
             mr = MarcRecord(record)
             list_of_record_dictionaries.append(mr.to_dictionary())
         return list_of_record_dictionaries
+
+    def csv_path(self):
+        filename, _file_extension = os.path.splitext(self.input_file_path)
+        output_file = filename + ".csv"
+        return output_file

@@ -28,41 +28,16 @@ To this end, there will be much more strict string normalization in this layer. 
   - Replacing '&' with 'and'
 
 ## Using the code
-This obviously needs to be refined
-
-1. Start python interactive interpreter
+1. Set up the environment, as described below
+2. Call the main.py python script with arguments for the two MarcXML files you want to compare for - file1 and file2 are required, dir is not required.
 ```bash
-python
+python main.py --file1="tests/alma_marc_records_short.xml" --file2="tests/alma_marc_records.xml" --dir="experiments_files_and_output"
 ```
-2. Import needed libraries
-```python
-from pymarc import parse_xml_to_array
-from src.marc_record import MarcRecord
-from src.gold_rush import GoldRush
-```
-3. Create an object with example marc records from marc xml
-```python
-all_records = parse_xml_to_array("tests/alma_marc_records.xml")
-```
-4. Create a dictionary of an example record
-```python
-new_record = MarcRecord(all_records[0])
-new_record.to_dictionary()
-```
-5. Create a GoldRush string of an example record
-```python
-gr = GoldRush(new_record)
-gr.as_gold_rush()
-```
-
-6. create list of GoldRush strings
-```python
-list_of_records = []
-for record in all_records:
-  mr = MarcRecord(record)
-  gr = GoldRush(mr)
-  list_of_records.append(gr.as_gold_rush())
-```
+3. If you do not already have settings and training data, it will open an interactive session in your terminal to see whether you, as a human, think two things are duplicates or not, to train the Machine Learning algorithm. Follow the instructions in your terminal
+4. It will output a CSV of all the records you input, with three added columns:
+  a. Cluster ID - all records that it thinks are matches of each other will have the same Cluster ID. If a record does not have a Cluster ID, that means the machine learning algorithm does not think it has any duplicates.
+  b. Link score - how confident the algorithm is that the record belongs to its cluster. The higher the number, the more likely the record is a true match
+  c. source file - which file the record displayed is from
 
 ## Developing this application
 ### Set-up and install dependencies
@@ -77,7 +52,13 @@ python3 -m venv .venv
 
 3. install dependencies
 ```bash
+pip install -r requirements/[environment].txt
+
 pip install -r requirements/development.txt
+
+OR
+
+pip install -r requirements/common.txt
 ```
 
 ### Testing
@@ -98,5 +79,5 @@ pytest
 2. pylint - slower, does more in-depth checks
   - Currently excluding checks for documentation - remove these disables once this is remediated
 ```bash
-pylint src tests --disable=C0114,C0115,C0116
+pylint src tests main.py --disable=C0114,C0115,C0116
 ```
