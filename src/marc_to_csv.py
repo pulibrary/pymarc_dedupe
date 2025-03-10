@@ -1,6 +1,8 @@
 import csv
 import os.path
+from xml.sax import SAXParseException
 from pymarc import parse_xml_to_array
+from pymarc import parse_json_to_array
 from src.marc_record import MarcRecord
 
 
@@ -18,7 +20,10 @@ class MarcToCsv:
                 writer.writerow(record)
 
     def pymarc_records_from_file(self):
-        return parse_xml_to_array(self.input_file_path)
+        try:
+            return parse_xml_to_array(self.input_file_path)
+        except SAXParseException:
+            return parse_json_to_array(self.input_file_path)
 
     def records(self):
         list_of_record_dictionaries = []
