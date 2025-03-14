@@ -31,7 +31,7 @@ To this end, there will be much more strict string normalization in this layer. 
 1. Set up the environment, as described below
 2. Call the main.py python script with arguments for the two MarcXML files you want to compare for - file1 and file2 are required, dir is not required.
 ```bash
-python main.py --file1="tests/alma_marc_records_short.xml" --file2="tests/alma_marc_records.xml" --dir="experiments_files_and_output"
+python main.py --file1="tests/fixtures/alma_marc_records_short.xml" --file2="tests/fixtures/alma_marc_records.xml" --dir="experiments_files_and_output"
 ```
 3. If you do not already have settings and training data, it will open an interactive session in your terminal to see whether you, as a human, think two things are duplicates or not, to train the Machine Learning algorithm. Follow the instructions in your terminal
 4. It will output a CSV of all the records you input, with three added columns:
