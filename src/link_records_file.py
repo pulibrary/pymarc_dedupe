@@ -4,9 +4,10 @@ from src.marc_to_csv import MarcToCsv
 
 
 class LinkRecordsFile:
-    def __init__(self, input_file_path):
+    def __init__(self, input_file_path, dedupe=False):
         self.input_file_path = input_file_path
         self.csv_path = MarcToCsv(self.input_file_path).csv_path()
+        self.dedupe = dedupe
         if os.path.exists(self.csv_path):
             print("CSV file already present, not regenerating")
         else:
@@ -22,9 +23,19 @@ class LinkRecordsFile:
             reader = csv.DictReader(f)
             for i, row in enumerate(reader):
                 clean_row = {k: self.pre_process(v) for (k, v) in row.items()}
-                data_d[self.csv_path + str(i)] = dict(clean_row)
+
+                data_d[self.identifier(i)] = dict(clean_row)
 
         return data_d
+
+    def identifier(self, iterator):
+        ident = ""
+        if self.dedupe:
+            ident = int(iterator)
+        else:
+            ident = self.csv_path + str(iterator)
+
+        return ident
 
     def pre_process(self, val):
         """
