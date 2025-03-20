@@ -13,3 +13,11 @@ def test_deduplicating_one_set_of_records(mocker, helpers, console_inputs, all_f
     my_class = DedupeRecords(test_file, output_directory)
     model = my_class.deduper()
     my_class.cluster(model)
+
+
+def test_with_files_already_created():
+    test_file = "tests/fixtures/alma_marc_records_short.xml"
+    output_directory = "tests/test_outputs"
+    my_class = DedupeRecords(test_file, output_directory)
+    model = my_class.deduper()
+    my_class.cluster(model)
