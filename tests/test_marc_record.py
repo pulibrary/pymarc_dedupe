@@ -189,6 +189,21 @@ def test_vernacular_title():
     assert (new_record.title()) == "新诗三百首百年新编"
 
 
+def test_vernacular_title_missing_transliteration():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(
+            tag="245",
+            subfields=[
+                Subfield(code="6", value="880-01"),
+                Subfield(code="a", value="Xin shi san bai shou bai nian xin bian / "),
+            ],
+        )
+    )
+    new_record = MarcRecord(pymarc_record)
+    assert (new_record.title()) == "Xin shi san bai shou bai nian xin bian"
+
+
 def test_title_no_subfield_p(record_with_title):
     new_record = MarcRecord(record_with_title)
     assert (new_record.title()) == "Science : a poem dedicated etc. : and so forth"

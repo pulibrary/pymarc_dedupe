@@ -1,45 +1,16 @@
-import os
 from unittest.mock import patch
 
 from src.link_records import LinkRecords
 
 
 @patch("builtins.input")
-def test_comparing_two_sets_of_records(mocker):
-    # Needed to mock interactive console
-    inputs = [
-        "n",
-        "y",
-        "n",
-        "n",
-        "y",
-        "y",
-        "n",
-        "n",
-        "y",
-        "y",
-        "y",
-        "y",
-        "y",
-        "y",
-        "y",
-        "f",
-    ]
-    mocker.side_effect = inputs
+def test_comparing_two_sets_of_records(mocker, helpers, console_inputs, all_files):
+    # Mock interactive console
+    mocker.side_effect = console_inputs
     left_file = "tests/fixtures/alma_marc_records_short.xml"
     right_file = "tests/fixtures/hl_marc_records_short.xml"
     output_directory = "tests/test_outputs"
-    # delete any previous test files
-    files = [
-        "tests/test_outputs/data_matching_learned_settings",
-        "tests/test_outputs/data_matching_output.csv",
-        "tests/test_outputs/data_matching_training.json",
-    ]
-    for file in files:
-        try:
-            os.remove(file)
-        except FileNotFoundError:
-            pass
+    helpers.file_cleanup(all_files)
     linker = LinkRecords(left_file, right_file, output_directory)
     linker.fields()
     linker.linker()
@@ -64,37 +35,15 @@ def test_clustering_with_pre_existing_training_data():
 
 
 @patch("builtins.input")
-def test_prepare_training_data(mocker):
-    # Needed to mock interactive console
-    inputs = [
-        "n",
-        "y",
-        "n",
-        "n",
-        "y",
-        "y",
-        "n",
-        "n",
-        "y",
-        "y",
-        "y",
-        "y",
-        "y",
-        "y",
-        "y",
-        "f",
-    ]
-    mocker.side_effect = inputs
+def test_prepare_training_data(mocker, helpers, console_inputs):
+    # Mock interactive console
+    mocker.side_effect = console_inputs
     # delete any previous test files, other than training data
     files = [
         "tests/test_outputs/data_matching_learned_settings",
         "tests/test_outputs/data_matching_output.csv",
     ]
-    for file in files:
-        try:
-            os.remove(file)
-        except FileNotFoundError:
-            pass
+    helpers.file_cleanup(files)
     left_file = "tests/fixtures/alma_marc_records_short.xml"
     right_file = "tests/fixtures/hl_marc_records_short.xml"
     output_directory = "tests/test_outputs"
@@ -104,41 +53,15 @@ def test_prepare_training_data(mocker):
 
 
 @patch("builtins.input")
-def test_comparing_two_sets_of_records_with_json(mocker):
-    # Needed to mock interactive console
-    inputs = [
-        "n",
-        "y",
-        "n",
-        "n",
-        "y",
-        "y",
-        "n",
-        "n",
-        "y",
-        "y",
-        "y",
-        "y",
-        "y",
-        "y",
-        "y",
-        "f",
-    ]
-    mocker.side_effect = inputs
+def test_comparing_two_sets_of_records_with_json(
+    mocker, helpers, console_inputs, all_files
+):
+    # Mock interactive console
+    mocker.side_effect = console_inputs
     left_file = "tests/fixtures/alma_marc_records_short.xml"
     right_file = "tests/fixtures/marc_records.json"
     output_directory = "tests/test_outputs"
-    # delete any previous test files
-    files = [
-        "tests/test_outputs/data_matching_learned_settings",
-        "tests/test_outputs/data_matching_output.csv",
-        "tests/test_outputs/data_matching_training.json",
-    ]
-    for file in files:
-        try:
-            os.remove(file)
-        except FileNotFoundError:
-            pass
+    helpers.file_cleanup(all_files)
     linker = LinkRecords(left_file, right_file, output_directory)
     linker.fields()
     linker.linker()

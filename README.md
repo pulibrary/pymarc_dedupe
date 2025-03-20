@@ -29,9 +29,17 @@ To this end, there will be much more strict string normalization in this layer. 
 
 ## Using the code
 1. Set up the environment, as described below
-2. Call the main.py python script with arguments for the two MarcXML files you want to compare for - file1 and file2 are required, dir is not required.
+2. Call the main.py python script with arguments for the file or files you want to compare.
+
+   You can give either MarcXML or JSON files, and either one file (will find duplicates within that files) or two files (will find duplicates within and between the files) - file1 is required, file2 and dir are not required.
+
+Compare two MarcXML files
 ```bash
 python main.py --file1="tests/fixtures/alma_marc_records_short.xml" --file2="tests/fixtures/alma_marc_records.xml" --dir="experiments_files_and_output"
+```
+Find duplicates in a single JSON file
+```bash
+python main.py --file1="tests/fixtures/marc_records.json"
 ```
 3. If you do not already have settings and training data, it will open an interactive session in your terminal to see whether you, as a human, think two things are duplicates or not, to train the Machine Learning algorithm. Follow the instructions in your terminal
 4. It will output a CSV of all the records you input, with three added columns:

@@ -1,5 +1,6 @@
 import string
 import re
+import pymarc
 from src.gold_rush import GoldRush
 
 
@@ -70,7 +71,7 @@ class MarcRecord:
     def __vernacular_title_field(self):
         try:
             return self.record.get_linked_fields(self.record["245"])[0]
-        except (KeyError, IndexError):
+        except (KeyError, IndexError, pymarc.exceptions.MissingLinkedFields):
             return ""
 
     def publication_year(self):
@@ -161,13 +162,13 @@ class MarcRecord:
     def __vernacular_author_field(self):
         try:
             return self.record.get_linked_fields(self.record["100"])[0]
-        except (KeyError, IndexError):
+        except (KeyError, IndexError, pymarc.exceptions.MissingLinkedFields):
             try:
                 return self.record.get_linked_fields(self.record["110"])[0]
-            except (KeyError, IndexError):
+            except (KeyError, IndexError, pymarc.exceptions.MissingLinkedFields):
                 try:
                     return self.record.get_linked_fields(self.record["111"])[0]
-                except (KeyError, IndexError):
+                except (KeyError, IndexError, pymarc.exceptions.MissingLinkedFields):
                     return ""
 
     def title_inclusive_dates(self):

@@ -1,3 +1,4 @@
+import os
 import pytest
 from pymarc import parse_xml_to_array, Record, Field, Subfield
 
@@ -249,3 +250,53 @@ def fixture_example_dictionary():
 
 
 # pylint: enable=line-too-long
+
+
+@pytest.fixture(name="console_inputs")
+def fixture_console_inputs():
+    return [
+        "n",
+        "y",
+        "n",
+        "n",
+        "y",
+        "y",
+        "n",
+        "n",
+        "y",
+        "y",
+        "y",
+        "y",
+        "y",
+        "y",
+        "y",
+        "f",
+    ]
+
+
+# pylint: disable=too-few-public-methods
+class Helpers:
+    @staticmethod
+    def file_cleanup(files):
+        for file in files:
+            try:
+                os.remove(file)
+            except FileNotFoundError:
+                pass
+
+
+# pylint: enable=too-few-public-methods
+
+
+@pytest.fixture
+def helpers():
+    return Helpers
+
+
+@pytest.fixture(name="all_files")
+def fixture_all_files():
+    return [
+        "tests/test_outputs/data_matching_learned_settings",
+        "tests/test_outputs/data_matching_output.csv",
+        "tests/test_outputs/data_matching_training.json",
+    ]

@@ -1,11 +1,12 @@
 #!/usr/bin/python
 import argparse
 from src.link_records import LinkRecords
+from src.dedupe_records import DedupeRecords
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="PyMarc Dedupe",
-        description="""Script that compares two Marc XML files
+        description="""Script that compares two Marc XML or JSON files
          to find duplicates using machine learning""",
     )
     parser.add_argument(
@@ -18,7 +19,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--file2",
         "-f2",
-        required=True,
+        required=False,
         type=str,
         help="the path to the second Marc Xml file for comparison",
     )
@@ -36,11 +37,18 @@ if __name__ == "__main__":
     file2 = args.file2
     output_dir = args.dir
     print("file1 is " + file1)
-    print("file2 is " + file2)
+    try:
+        print("file2 is " + file2)
+    except TypeError:
+        print("No second file provided, finding duplicates within first file")
     print("dir is " + output_dir)
 
     print("importing data ...")
-
-    link_records = LinkRecords(file1, file2, output_dir)
-    linker = link_records.linker()
-    link_records.cluster(linker)
+    try:
+        my_class = LinkRecords(file1, file2, output_dir)
+        model = my_class.linker()
+        my_class.cluster(model)
+    except TypeError:
+        my_class = DedupeRecords(file1, output_dir)
+        model = my_class.deduper()
+        my_class.cluster(model)
