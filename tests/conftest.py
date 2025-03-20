@@ -251,7 +251,8 @@ def fixture_example_dictionary():
 
 # pylint: enable=line-too-long
 
-@pytest.fixture(name='console_inputs')
+
+@pytest.fixture(name="console_inputs")
 def fixture_console_inputs():
     return [
         "n",
@@ -271,6 +272,8 @@ def fixture_console_inputs():
         "y",
         "f",
     ]
+
+
 # pylint: disable=too-few-public-methods
 class Helpers:
     @staticmethod
@@ -280,13 +283,17 @@ class Helpers:
                 os.remove(file)
             except FileNotFoundError:
                 pass
+
+
 # pylint: enable=too-few-public-methods
+
 
 @pytest.fixture
 def helpers():
     return Helpers
 
-@pytest.fixture(name='all_files')
+
+@pytest.fixture(name="all_files")
 def fixture_all_files():
     return [
         "tests/test_outputs/data_matching_learned_settings",

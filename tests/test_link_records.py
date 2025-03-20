@@ -53,7 +53,9 @@ def test_prepare_training_data(mocker, helpers, console_inputs):
 
 
 @patch("builtins.input")
-def test_comparing_two_sets_of_records_with_json(mocker, helpers, console_inputs, all_files):
+def test_comparing_two_sets_of_records_with_json(
+    mocker, helpers, console_inputs, all_files
+):
     # Mock interactive console
     mocker.side_effect = console_inputs
     left_file = "tests/fixtures/alma_marc_records_short.xml"
