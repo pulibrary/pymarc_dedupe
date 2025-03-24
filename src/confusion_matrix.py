@@ -13,10 +13,10 @@ class ConfusionMatrix:
                 ("false negative", 0),
             ]
         )
-        for label in self.labels_data:
-            first_cluster_id = self.model_data[label["id1"]]["cluster_id"]
-            second_cluster_id = self.model_data[label["id2"]]["cluster_id"]
-            label = int(label["label"])
+        for label_row in self.labels_data:
+            first_cluster_id = self.model_data[label_row["id1"]]["Cluster ID"]
+            second_cluster_id = self.model_data[label_row["id2"]]["Cluster ID"]
+            label = int(label_row["label"])
             model_guess = self.model_guess(first_cluster_id, second_cluster_id)
             if label == model_guess == 1:
                 confusion_matrix["true positive"] += 1
