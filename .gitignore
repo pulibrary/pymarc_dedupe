@@ -12,3 +12,4 @@ tests/fixtures/alma_marc_records.csv
 tests/fixtures/marc_records.csv
 tests/test_outputs/*
 experiments_files_and_output/*
+.coverage*

@@ -3,3 +3,4 @@ coveralls
 pytest
 pylint
 ruff
+pytest-cov
