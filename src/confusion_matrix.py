@@ -14,8 +14,8 @@ class ConfusionMatrix:
             ]
         )
         for label_row in self.labels_data:
-            first_cluster_id = self.model_data[label_row["id1"]]["Cluster ID"]
-            second_cluster_id = self.model_data[label_row["id2"]]["Cluster ID"]
+            first_cluster_id = self.model_data[label_row["id1"]]["cluster_id"]
+            second_cluster_id = self.model_data[label_row["id2"]]["cluster_id"]
             label = int(label_row["label"])
             model_guess = self.model_guess(first_cluster_id, second_cluster_id)
             if label == model_guess == 1:
@@ -26,10 +26,6 @@ class ConfusionMatrix:
                 confusion_matrix["false negative"] += 1
             elif label != model_guess and label == 0:
                 confusion_matrix["false positive"] += 1
-            else:
-                raise ValueError(
-                    "You should not be able to reach this, there is something wrong"
-                )
         return confusion_matrix
 
     def tp(self):
