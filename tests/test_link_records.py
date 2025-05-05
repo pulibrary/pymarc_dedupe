@@ -1,3 +1,4 @@
+import shutil
 from unittest.mock import patch
 
 from src.link_records import LinkRecords
@@ -65,3 +66,11 @@ def test_comparing_two_sets_of_records_with_json(
     linker = LinkRecords(left_file, right_file, output_directory)
     linker.fields()
     linker.linker()
+
+
+def test_creating_dir():
+    output_directory = "tests/test_outputs"
+    left_file = "tests/fixtures/alma_marc_records_short.xml"
+    right_file = "tests/fixtures/marc_records.json"
+    shutil.rmtree(output_directory, ignore_errors=True)
+    LinkRecords(left_file, right_file, output_directory)

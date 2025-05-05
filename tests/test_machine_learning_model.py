@@ -9,9 +9,11 @@ def test_inheritance():
 
 
 # pylint: disable=abstract-method
+# pylint: disable=useless-parent-delegation
 class TestChildClass(MachineLearningModel):
-    def any_method(self):
-        return True
+    def __init__(self, output_directory, match_threshold=0.5):
+        super().__init__(output_directory, match_threshold)
 
 
 # pylint: enable=abstract-method
+# pylint: enable=useless-parent-delegation
