@@ -1,3 +1,4 @@
+import os.path
 from xml.sax import SAXParseException
 import psycopg2
 from pymarc import parse_xml_to_array
@@ -20,12 +21,16 @@ author TEXT,
 title_inclusive_dates TEXT,
 gov_doc_number TEXT,
 is_electronic_resource BOOL,
-gold_rush TEXT
+gold_rush TEXT,
+record_source TEXT
 );
 """
 
-RECORD_SQL = """INSERT INTO records VALUES
-(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+CREATE_RECORD_SQL = """INSERT INTO records VALUES
+(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+"""
+
+FIND_RECORD_SQL = """SELECT * FROM records WHERE id = (%s);
 """
 
 
@@ -45,6 +50,14 @@ class MarcToDb:
             cur.execute(CREATE_TABLE_SQL)
             for record in self.pymarc_records_from_file():
                 mr = MarcRecord(record)
+                cur.execute("SELECT * FROM records WHERE id = (%s)", (mr.id(),))
+                result = cur.fetchall()
+                if len(result) > 0:
+                    continue
+
+                record_source, _file_extension = os.path.splitext(
+                    os.path.basename(self.input_file_path)
+                )
                 data = (
                     mr.id(),
                     mr.title(),
@@ -61,8 +74,9 @@ class MarcToDb:
                     mr.gov_doc_number(),
                     mr.is_electronic_resource(),
                     GoldRush(mr).as_gold_rush(),
+                    record_source,
                 )
-                cur.execute(RECORD_SQL, data)
+                cur.execute(CREATE_RECORD_SQL, data)
 
     def pymarc_records_from_file(self):
         try:
