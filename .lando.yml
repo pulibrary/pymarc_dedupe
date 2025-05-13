@@ -1,0 +1,8 @@
+name: pymarc_dedupe
+services:
+  dev_db:
+    type: postgres:16
+    portforward: true
+  test_db:
+    type: postgres:16
+    portforward: true

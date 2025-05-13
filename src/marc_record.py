@@ -14,7 +14,7 @@ class MarcRecord:
             "id": self.id(),
             "title": self.title(),
             "transliterated_title": self.transliterated_title(),
-            "publication_year": self.publication_year(),
+            "publication_year": self.publication_year() or "",
             "pagination": self.pagination(),
             "edition": self.edition(),
             "publisher_name": self.publisher_name(),
@@ -75,7 +75,7 @@ class MarcRecord:
             return ""
 
     def publication_year(self):
-        pub_year = ""
+        pub_year = None
         if self.date_one() and self.date_two():
             pub_year = self.date_two()
         elif self.date_one() and not self.date_two():
@@ -275,20 +275,20 @@ class MarcRecord:
             date_string = self.record["008"].data[7:11]
             return self.__as_date(date_string)
         except KeyError:
-            return ""
+            return None
 
     def date_two(self):
         try:
             date_string = self.record["008"].data[11:15]
             return self.__as_date(date_string)
         except KeyError:
-            return ""
+            return None
 
     def __date_of_production(self):
         try:
             date_string = self.record["264"]["c"]
         except KeyError:
-            return ""
+            return None
         return self.__as_date(date_string)
 
     def __date_of_publication(self):

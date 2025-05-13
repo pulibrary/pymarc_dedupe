@@ -69,6 +69,12 @@ OR
 pip install -r requirements/common.txt
 ```
 
+Bring up the database using lando
+
+```bash
+lando start
+```
+
 ### Testing
 ```bash
 pytest

@@ -1,6 +1,23 @@
 import os
 import pytest
 from pymarc import parse_xml_to_array, Record, Field, Subfield
+import subprocess
+import json
+
+@pytest.fixture(scope="session", name="db_config")
+def fixture_database_config():
+    lando_config_string = subprocess.check_output(
+        ["lando", "info", "--format=json", "--service=test_db"], text=True
+    )
+    lando_config = json.loads(lando_config_string)
+    db_config = {
+        "host": lando_config[0]["external_connection"]["host"],
+        "port": lando_config[0]["external_connection"]["port"],
+        "dbname": lando_config[0]["creds"]["database"],
+        "user": lando_config[0]["creds"]["user"],
+        "password": lando_config[0]["creds"]["password"],
+    }
+    return db_config
 
 
 @pytest.fixture(scope="session", name="all_records")

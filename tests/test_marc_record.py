@@ -13,7 +13,8 @@ def test_empty_record():
     # if any one field is empty, our code will error
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    new_record.to_dictionary()
+    empty_record = new_record.to_dictionary()
+    assert('None' in empty_record['gold_rush']) == False
 
 
 def test_two_valid_dates_publication_year():
@@ -105,7 +106,7 @@ def test_date_two():
 def test_date_of_production():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    assert (new_record._MarcRecord__date_of_production()) == ""
+    assert (new_record._MarcRecord__date_of_production()) == None
 
 
 def test_date_of_publication():

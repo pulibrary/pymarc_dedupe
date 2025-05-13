@@ -9,7 +9,7 @@ class GoldRush:
     def as_gold_rush(self):
         return (
             self.title()
-            + self.publication_year()
+            + (self.publication_year() or '')
             + self.pagination()
             + self.edition()
             + self.publisher_name()
@@ -31,7 +31,7 @@ class GoldRush:
         return self.pad(some_string, 30)
 
     def publication_year(self):
-        some_string = str(self.marc_record.publication_year()) or ""
+        some_string = str(self.marc_record.publication_year() or '')
         return self.pad(some_string, 4)
 
     def pagination(self):

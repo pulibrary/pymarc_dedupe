@@ -1,3 +1,4 @@
 pymarc
 unidecode
 dedupe
+psycopg2
