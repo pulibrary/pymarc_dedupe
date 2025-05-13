@@ -14,7 +14,7 @@ def test_empty_record():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
     empty_record = new_record.to_dictionary()
-    assert('None' in empty_record['gold_rush']) == False
+    assert "None" not in empty_record["gold_rush"]
 
 
 def test_two_valid_dates_publication_year():
@@ -106,7 +106,7 @@ def test_date_two():
 def test_date_of_production():
     pymarc_record = Record()
     new_record = MarcRecord(pymarc_record)
-    assert (new_record._MarcRecord__date_of_production()) == None
+    assert new_record._MarcRecord__date_of_production() is None
 
 
 def test_date_of_publication():

@@ -1,9 +1,9 @@
 from xml.sax import SAXParseException
+import psycopg2
 from pymarc import parse_xml_to_array
 from pymarc import parse_json_to_array
 from src.marc_record import MarcRecord
 from src.gold_rush import GoldRush
-import psycopg2
 
 CREATE_TABLE_SQL = """CREATE TABLE IF NOT EXISTS records (
 id TEXT,
@@ -24,13 +24,10 @@ gold_rush TEXT
 );
 """
 
-# RECORD_SQL="""PREPARE record_insert (TEXT, TEXT, TEXT, INT, TEXT, TEXT, TEXT, VARCHAR, TEXT, TEXT, TEXT, TEXT, TEXT, BOOL, TEXT) AS
-#   INSERT INTO records VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15);
-# EXECUTE record_insert(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-# """
-RECORD_SQL = "INSERT INTO records VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+RECORD_SQL = """INSERT INTO records VALUES
+(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+"""
 
-COLUMNS = ['id', 'title', 'transliterated_title', 'publication_year', 'pagination', 'edition', 'publisher_name', 'type_of', 'title_part', 'title_number', 'author', 'title_inclusive_dates', 'gov_doc_number', 'is_electronic_resource', 'gold_rush']
 
 class MarcToDb:
     def __init__(self, input_file_path, db_config):
@@ -45,12 +42,27 @@ class MarcToDb:
     def to_db(self):
         self.conn.autocommit = True
         with self.conn.cursor() as cur:
-          cur.execute(CREATE_TABLE_SQL)
-          for record in self.pymarc_records_from_file():
-              
-              mr = MarcRecord(record)
-              data = (mr.id(), mr.title(), mr.transliterated_title(), mr.publication_year(), mr.pagination(), mr.edition(), mr.publisher_name(), mr.type_of(), mr.title_part(), mr.title_number(), mr.author(), mr.title_inclusive_dates(), mr.gov_doc_number(), mr.is_electronic_resource(), GoldRush(mr).as_gold_rush())
-              cur.execute(RECORD_SQL, data)
+            cur.execute(CREATE_TABLE_SQL)
+            for record in self.pymarc_records_from_file():
+                mr = MarcRecord(record)
+                data = (
+                    mr.id(),
+                    mr.title(),
+                    mr.transliterated_title(),
+                    mr.publication_year(),
+                    mr.pagination(),
+                    mr.edition(),
+                    mr.publisher_name(),
+                    mr.type_of(),
+                    mr.title_part(),
+                    mr.title_number(),
+                    mr.author(),
+                    mr.title_inclusive_dates(),
+                    mr.gov_doc_number(),
+                    mr.is_electronic_resource(),
+                    GoldRush(mr).as_gold_rush(),
+                )
+                cur.execute(RECORD_SQL, data)
 
     def pymarc_records_from_file(self):
         try:

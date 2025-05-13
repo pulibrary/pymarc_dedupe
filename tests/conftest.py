@@ -1,18 +1,19 @@
 import os
-import pytest
-from pymarc import parse_xml_to_array, Record, Field, Subfield
 import subprocess
 import json
+import pytest
+from pymarc import parse_xml_to_array, Record, Field, Subfield
+
 
 @pytest.fixture(scope="session", name="db_config")
 def fixture_database_config():
-    if os.environ.get('CI'):
+    if os.environ.get("CI"):
         db_config = {
             "host": "localhost",
             "port": "5432",
             "dbname": "test_db",
             "user": "postgres",
-            "password": ""
+            "password": "",
         }
     else:
         lando_config_string = subprocess.check_output(
