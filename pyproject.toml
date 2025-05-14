@@ -1,2 +1,0 @@
-[tool.pytest_env]
-ENV_FOR_DYNACONF = "local_test"
