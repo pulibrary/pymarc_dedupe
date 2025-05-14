@@ -1,6 +1,7 @@
 import os.path
 from xml.sax import SAXParseException
 import psycopg2
+from dotenv import load_dotenv
 from pymarc import parse_xml_to_array
 from pymarc import parse_json_to_array
 from src.marc_record import MarcRecord

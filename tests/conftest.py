@@ -13,19 +13,16 @@ def fixture_database_config():
             "port": "5432",
             "dbname": "test_db",
             "user": "postgres",
-            "password": "",
+            "password": "test",
         }
     else:
-        lando_config_string = subprocess.check_output(
-            ["lando", "info", "--format=json", "--service=test_db"], text=True
-        )
-        lando_config = json.loads(lando_config_string)
+        # postgresql://postgres@localhost:5433/database
         db_config = {
-            "host": lando_config[0]["external_connection"]["host"],
-            "port": lando_config[0]["external_connection"]["port"],
-            "dbname": lando_config[0]["creds"]["database"],
-            "user": lando_config[0]["creds"]["user"],
-            "password": lando_config[0]["creds"]["password"],
+            "host": 'localhost',
+            "port": 5434,
+            "dbname": 'database',
+            "user": 'postgres',
+            "password": "",
         }
     return db_config
 
