@@ -3,6 +3,7 @@ from xml.sax import SAXParseException
 import psycopg2
 from pymarc import parse_xml_to_array
 from pymarc import parse_json_to_array
+from config import settings
 from src.marc_record import MarcRecord
 from src.gold_rush import GoldRush
 
@@ -35,13 +36,13 @@ FIND_RECORD_SQL = """SELECT * FROM records WHERE id = (%s);
 
 
 class MarcToDb:
-    def __init__(self, input_file_path, db_config):
+    def __init__(self, input_file_path):
         self.input_file_path = input_file_path
         self.conn = psycopg2.connect(
-            database=db_config["dbname"],
-            user=db_config["user"],
-            host=db_config["host"],
-            port=db_config["port"],
+            database=settings.db_name,
+            user=settings.db_user,
+            host=settings.db_host,
+            port=settings.db_port,
         )
 
     def to_db(self):

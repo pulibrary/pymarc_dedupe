@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import argparse
+
+# from config import settings
 from src.link_records import LinkRecords
 from src.dedupe_records import DedupeRecords
 

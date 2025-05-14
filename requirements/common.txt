@@ -2,3 +2,4 @@ pymarc
 unidecode
 dedupe
 psycopg2
+dynaconf

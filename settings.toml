@@ -1,0 +1,22 @@
+[default]
+name = ""
+
+[development]
+name = "developing"
+db_name = "database"
+db_user = "postgres"
+db_host = "localhost"
+db_port = 5433
+
+[test]
+name = "testing"
+db_name = "database"
+db_user = "postgres"
+db_host = "localhost"
+db_port = 5434
+
+[staging]
+name = "staging-ing"
+
+[production]
+name = "production-ing"
