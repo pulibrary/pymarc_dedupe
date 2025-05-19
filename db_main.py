@@ -34,4 +34,5 @@ if __name__ == "__main__":
 
     my_class = DbDedupeRecords(input_dir, output_dir)
     model = my_class.deduper()
+    my_class.block(model)
     my_class.cluster(model)

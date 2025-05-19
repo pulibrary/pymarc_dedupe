@@ -45,7 +45,11 @@ python main.py --file1="tests/fixtures/marc_records.json"
 Find duplicates from files in a directory
 ```bash
 python db_main.py --input_dir="db_input_files" --output_dir="db_experiments"
+
+# short experiment
+python db_main.py --input_dir="tests/fixtures/for_db"
 ```
+
 
 3. If you do not already have settings and training data, it will open an interactive session in your terminal to see whether you, as a human, think two things are duplicates or not, to train the Machine Learning algorithm. Follow the instructions in your terminal
 4. It will output a CSV of all the records you input, with three added columns:

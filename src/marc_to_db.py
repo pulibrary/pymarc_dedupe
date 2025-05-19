@@ -44,9 +44,10 @@ class MarcToDb:
             host=settings.db_host,
             port=settings.db_port,
         )
+        self.conn.autocommit = True
+        self.find_or_create_table()
 
     def to_db(self):
-        self.conn.autocommit = True
         with self.conn.cursor() as cur:
             cur.execute(CREATE_TABLE_SQL)
             for record in self.pymarc_records_from_file():
@@ -92,3 +93,7 @@ class MarcToDb:
             return parse_xml_to_array(self.input_file_path)
         except SAXParseException:
             return parse_json_to_array(self.input_file_path)
+
+    def find_or_create_table(self):
+        with self.conn.cursor() as cur:
+            cur.execute(CREATE_TABLE_SQL)
