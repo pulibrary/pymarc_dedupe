@@ -14,6 +14,7 @@ def test_deduplicating_directory_of_records(mocker, helpers, console_inputs, all
     my_class.block(model)
     my_class.cluster(model)
 
+
 # pylint: disable=duplicate-code
 @patch("builtins.input")
 def test_prepare_training_data(mocker, helpers, console_inputs):

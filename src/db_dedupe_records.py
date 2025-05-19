@@ -54,7 +54,10 @@ class DbDedupeRecords(MachineLearningModel):
             temp_d = dict(enumerate(cur))
         try:
             with open(self.training_file_path, encoding="utf-8") as tf:
-                print(f'Loading training data from {self.training_file_path} - you can skip console label if you would like')
+                print(
+                    f"Loading training data from {self.training_file_path}"
+                    "- you can skip console label if you would like"
+                )
                 return model.prepare_training(temp_d, training_file=tf)
         except FileNotFoundError:
             return model.prepare_training(temp_d)
