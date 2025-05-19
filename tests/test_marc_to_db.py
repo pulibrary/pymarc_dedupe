@@ -2,7 +2,7 @@ from src.marc_to_db import MarcToDb
 
 
 def test_turning_marc_xml_to_db():
-    new_thing = MarcToDb("tests/fixtures/alma_marc_records.xml")
+    new_thing = MarcToDb("tests/fixtures/for_db/alma_marc_records.xml")
     new_thing.to_db()
 
     sql = "SELECT * FROM records WHERE record_source = 'alma_marc_records';"
@@ -13,7 +13,7 @@ def test_turning_marc_xml_to_db():
 
 
 def test_turning_marc_json_to_db():
-    new_thing = MarcToDb("tests/fixtures/marc_records.json")
+    new_thing = MarcToDb("tests/fixtures/for_db/marc_records.json")
     new_thing.to_db()
     new_thing.to_db()
     sql = "SELECT * FROM records WHERE record_source = 'marc_records';"

@@ -29,9 +29,9 @@ To this end, there will be much more strict string normalization in this layer. 
 
 ## Using the code
 1. Set up the environment, as described below
-2. Call the main.py python script with arguments for the file or files you want to compare.
+2. Call the python script with arguments for the file, pair of files, or directory you want to compare.
 
-   You can give either MarcXML or JSON files, and either one file (will find duplicates within that files) or two files (will find duplicates within and between the files) - file1 is required, file2 and dir are not required.
+   For the main.py script, you can give either MarcXML or JSON files, and either one file (will find duplicates within that files) or two files (will find duplicates within and between the files) - file1 is required, file2 and dir are not required.
 
 Compare two MarcXML files
 ```bash
@@ -41,6 +41,12 @@ Find duplicates in a single JSON file
 ```bash
 python main.py --file1="tests/fixtures/marc_records.json"
 ```
+
+Find duplicates from files in a directory
+```bash
+python db_main.py --input_dir="db_input_files" --output_dir="db_experiments"
+```
+
 3. If you do not already have settings and training data, it will open an interactive session in your terminal to see whether you, as a human, think two things are duplicates or not, to train the Machine Learning algorithm. Follow the instructions in your terminal
 4. It will output a CSV of all the records you input, with three added columns:
   a. Cluster ID - all records that it thinks are matches of each other will have the same Cluster ID. If a record does not have a Cluster ID, that means the machine learning algorithm does not think it has any duplicates.
@@ -50,7 +56,7 @@ python main.py --file1="tests/fixtures/marc_records.json"
 ## Developing this application
 ### Set-up and install dependencies
 1. Make a .venv
-```
+```bash
 python3 -m venv .venv
 ```
 2. activate the environment

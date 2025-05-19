@@ -11,7 +11,7 @@ CREATE_TABLE_SQL = """CREATE TABLE IF NOT EXISTS records (
 id TEXT,
 title TEXT,
 transliterated_title TEXT,
-publication_year INT,
+publication_year TEXT,
 pagination TEXT,
 edition TEXT,
 publisher_name TEXT,
@@ -51,6 +51,10 @@ class MarcToDb:
             cur.execute(CREATE_TABLE_SQL)
             for record in self.pymarc_records_from_file():
                 mr = MarcRecord(record)
+                # this requires 1 to 2 database queries per record,
+                # which is probably making this slow
+                # could we create an array of record IDs from the database at the beginning
+                # and then check the record ID against that array?
                 cur.execute("SELECT * FROM records WHERE id = (%s)", (mr.id(),))
                 result = cur.fetchall()
                 if len(result) > 0:
@@ -61,25 +65,29 @@ class MarcToDb:
                 )
                 data = (
                     mr.id(),
-                    mr.title(),
-                    mr.transliterated_title(),
-                    mr.publication_year(),
-                    mr.pagination(),
-                    mr.edition(),
-                    mr.publisher_name(),
-                    mr.type_of(),
-                    mr.title_part(),
-                    mr.title_number(),
-                    mr.author(),
-                    mr.title_inclusive_dates(),
-                    mr.gov_doc_number(),
+                    mr.title() or None,
+                    mr.transliterated_title() or None,
+                    mr.publication_year() or None,
+                    mr.pagination() or None,
+                    mr.edition() or None,
+                    mr.publisher_name() or None,
+                    mr.type_of() or None,
+                    mr.title_part() or None,
+                    mr.title_number() or None,
+                    mr.author() or None,
+                    mr.title_inclusive_dates() or None,
+                    mr.gov_doc_number() or None,
                     mr.is_electronic_resource(),
                     GoldRush(mr).as_gold_rush(),
                     record_source,
                 )
+
                 cur.execute(CREATE_RECORD_SQL, data)
 
     def pymarc_records_from_file(self):
+        # I think for big files we're going to need something else here
+        # I think this requires putting the whole file in memory
+        # We could do the file in chunks?
         try:
             return parse_xml_to_array(self.input_file_path)
         except SAXParseException:
