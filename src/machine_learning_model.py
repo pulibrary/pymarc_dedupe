@@ -38,8 +38,6 @@ class MachineLearningModel:
         # When finished, save our training away to disk
         self.write_training(model)
         self.write_settings(model)
-        # Remove memory intensive objects used for training
-        # model.cleanup_training()
         return model
 
     def prepare_training(self, _model):

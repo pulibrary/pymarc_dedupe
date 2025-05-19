@@ -54,6 +54,7 @@ class DbDedupeRecords(MachineLearningModel):
             temp_d = dict(enumerate(cur))
         try:
             with open(self.training_file_path, encoding="utf-8") as tf:
+                print(f'Loading training data from {self.training_file_path} - you can skip console label if you would like')
                 return model.prepare_training(temp_d, training_file=tf)
         except FileNotFoundError:
             return model.prepare_training(temp_d)
@@ -130,7 +131,7 @@ class DbDedupeRecords(MachineLearningModel):
             clustered_dupes = model.cluster(
                 model.score(self.record_pairs(read_cur)), threshold=self.match_threshold
             )
-            print("writing results")
+            print("writing results to database")
             with self.write_con:
                 with self.write_con.cursor() as write_cur:
                     write_cur.copy_expert(
