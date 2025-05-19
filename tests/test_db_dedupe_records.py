@@ -13,6 +13,7 @@ def test_deduplicating_directory_of_records(mocker, helpers, console_inputs, all
     model = my_class.deduper()
     my_class.block(model)
     my_class.cluster(model)
+    model = my_class.deduper()
 
 
 # pylint: disable=duplicate-code

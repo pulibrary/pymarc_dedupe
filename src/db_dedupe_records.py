@@ -58,11 +58,13 @@ class DbDedupeRecords(MachineLearningModel):
                     f"Loading training data from {self.training_file_path}"
                     "- you can skip console label if you would like"
                 )
-                return model.prepare_training(temp_d, training_file=tf)
+                our_model = model.prepare_training(temp_d, training_file=tf)
         except FileNotFoundError:
-            return model.prepare_training(temp_d)
+            our_model = model.prepare_training(temp_d)
 
         del temp_d
+
+        return our_model
 
     def train_and_write_model(self, model):
         self.prepare_training(model)
