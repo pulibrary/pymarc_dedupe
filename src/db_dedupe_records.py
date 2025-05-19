@@ -17,7 +17,10 @@ RECORD_SELECT = """SELECT
 class DbDedupeRecords(MachineLearningModel):
     def __init__(self, input_directory, output_directory, match_threshold=0.5):
         super().__init__(output_directory, match_threshold)
-        for path in listdir(input_directory):
+        directory_list = listdir(input_directory)
+        if len(directory_list) == 0:
+            raise ValueError(f"Input directory {input_directory} must include files")
+        for path in directory_list:
             full_path = join(input_directory, path)
             if isfile(full_path):
                 # save to database

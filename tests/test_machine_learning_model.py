@@ -1,10 +1,10 @@
-import pytest
+from pytest import raises
 from src.machine_learning_model import MachineLearningModel
 
 
 def test_inheritance():
     instance_of_child = TestChildClass("output_directory")
-    with pytest.raises(NotImplementedError):
+    with raises(NotImplementedError):
         instance_of_child.prepare_training("")
 
 

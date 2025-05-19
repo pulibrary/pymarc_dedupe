@@ -1,4 +1,6 @@
+from os import makedirs
 from unittest.mock import patch
+from pytest import raises
 from src.db_dedupe_records import DbDedupeRecords
 
 
@@ -32,3 +34,12 @@ def test_prepare_training_data(mocker, helpers, console_inputs):
     my_class.block(model)
     my_class.cluster(model)
     # pylint: enable=duplicate-code
+
+
+def test_with_an_empty_input_dir(helpers, all_files):
+    helpers.file_cleanup(all_files)
+    input_directory = "tests/fixtures/empty_on_purpose"
+    makedirs(input_directory, exist_ok=True)
+    output_directory = "tests/test_outputs"
+    with raises(ValueError):
+        DbDedupeRecords(input_directory, output_directory)
