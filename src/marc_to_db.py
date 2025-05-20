@@ -52,8 +52,6 @@ class MarcToDb:
             map_xml(self.add_record, self.input_file_path)
         elif self.file_extension == ".json":
             map_json(self.add_record, self.input_file_path)
-            # for record in parse_streaming_json_to_array(self.input_file_path):
-            #     self.add_record(record)
 
     def add_record(self, record):
         mr = MarcRecord(record)

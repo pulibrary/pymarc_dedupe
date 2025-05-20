@@ -1,18 +1,13 @@
 import ijson
 from pymarc import JSONHandler
 
-class StreamingJSONHandler(JSONHandler):
-    def __init__(self):
-        super().__init__()
-
-    def element(self, element_dict, name=None):
-        super().element(element_dict, name)
 
 def parse_json(json_file, handler):
-    with open(json_file, 'rb') as file:
-        parser = ijson.items(file, 'item')
+    with open(json_file, "rb") as file:
+        parser = ijson.items(file, "item")
         for item in parser:
             handler.element(item)
+
 
 def map_json(function, *files):
     """Map a function onto the file.
@@ -27,7 +22,8 @@ def map_json(function, *files):
 
         map_json(do_it, 'marc.json')
     """
-    handler = StreamingJSONHandler()
+    handler = JSONHandler()
+    # this overrides the #process_record function in the JSONHandler class in pymarc
     handler.process_record = function
     for json_file in files:
         parse_json(json_file, handler)
