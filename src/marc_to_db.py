@@ -1,8 +1,9 @@
 import os.path
 import psycopg2
-from pymarc import map_xml, parse_json_to_array
+from pymarc import map_xml
 from config import settings
 from src.marc_record import MarcRecord
+from src.streaming_json_handler import map_json
 
 CREATE_TABLE_SQL = """CREATE TABLE IF NOT EXISTS records (
 id TEXT,
@@ -50,12 +51,12 @@ class MarcToDb:
         if self.file_extension == ".xml":
             map_xml(self.add_record, self.input_file_path)
         elif self.file_extension == ".json":
-            for record in parse_json_to_array(self.input_file_path):
-                self.add_record(record)
+            map_json(self.add_record, self.input_file_path)
+            # for record in parse_streaming_json_to_array(self.input_file_path):
+            #     self.add_record(record)
 
     def add_record(self, record):
         mr = MarcRecord(record)
-
         data = (
             mr.id(),
             mr.title() or None,
