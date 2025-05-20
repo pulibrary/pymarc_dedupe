@@ -16,6 +16,7 @@ RECORD_SELECT = """SELECT
 
 class DbDedupeRecords(MachineLearningModel):
     def __init__(self, input_directory, output_directory, match_threshold=0.5):
+        MarcToDb.find_or_create_table()
         super().__init__(output_directory, match_threshold)
         directory_list = listdir(input_directory)
         if len(directory_list) == 0:
@@ -166,5 +167,5 @@ class DbDedupeRecords(MachineLearningModel):
 def cluster_ids(clustered_dupes):
     for cluster, scores in clustered_dupes:
         cluster_id = cluster[0]
-        for donor_id, score in zip(cluster, scores):
-            yield donor_id, cluster_id, score
+        for record_id, score in zip(cluster, scores):
+            yield record_id, cluster_id, score

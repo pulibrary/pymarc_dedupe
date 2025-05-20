@@ -2,6 +2,7 @@ from src.marc_to_db import MarcToDb
 
 
 def test_turning_marc_xml_to_db():
+    MarcToDb.find_or_create_table()
     new_thing = MarcToDb("tests/fixtures/for_db/alma_marc_records.xml")
     new_thing.to_db()
 
@@ -13,6 +14,7 @@ def test_turning_marc_xml_to_db():
 
 
 def test_turning_marc_json_to_db():
+    MarcToDb.find_or_create_table()
     new_thing = MarcToDb("tests/fixtures/for_db/marc_records.json")
     new_thing.to_db()
     new_thing.to_db()
