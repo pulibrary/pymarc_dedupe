@@ -1,4 +1,5 @@
 import os.path
+import time
 import psycopg2
 from pymarc import map_xml
 from config import settings
@@ -48,10 +49,17 @@ class MarcToDb:
         self.cursor = self.conn.cursor()
 
     def to_db(self):
+        print(
+            f"""time: {time.asctime(time.localtime())} - 
+                writing records in {self.input_file_path} to database
+            """
+        )
         if self.file_extension == ".xml":
             map_xml(self.add_record, self.input_file_path)
         elif self.file_extension == ".json":
             map_json(self.add_record, self.input_file_path)
+        else:
+            raise ValueError("Files must be either xml or json")
 
     def add_record(self, record):
         mr = MarcRecord(record)

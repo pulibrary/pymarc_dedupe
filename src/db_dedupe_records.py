@@ -197,6 +197,7 @@ class DbDedupeRecords(MachineLearningModel):
             with open(self.output_file_path, "w", encoding="utf-8") as file:
                 cur.copy_expert("COPY for_csv TO STDOUT WITH CSV HEADER", file)
 
+
 def cluster_ids(clustered_dupes):
     for cluster, scores in clustered_dupes:
         cluster_id = cluster[0]
