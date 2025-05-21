@@ -144,7 +144,10 @@ class MarcRecord:
             author_field = self.__author_from_1xx()
 
         if author_field:
-            return self.__strip_ending_punctuation(author_field.get("a"))
+            try:
+                return self.__strip_ending_punctuation(author_field.get("a"))
+            except AttributeError:
+                return ""
         return ""
 
     def __author_from_1xx(self):
