@@ -44,7 +44,7 @@ class DedupeRecords(MachineLearningModel):
             for record_id, score in zip(cluster, scores):
                 cluster_membership[record_id] = {
                     "cluster_id": cluster_id,
-                    "Link Score": score,
+                    "cluster_score": score,
                 }
         self.write_output(cluster_membership)
 
@@ -58,7 +58,7 @@ class DedupeRecords(MachineLearningModel):
             header_unwritten = True
             additional_headers = [
                 "cluster_id",
-                "Link Score",
+                "cluster_score",
             ]
             filename = self.input_file
             with open(filename, encoding="utf-8") as f_input:

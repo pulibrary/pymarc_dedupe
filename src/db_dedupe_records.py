@@ -195,9 +195,7 @@ class DbDedupeRecords(MachineLearningModel):
         print(f"time: {time.asctime(time.localtime())} - writing results to csv")
         with self.read_con.cursor() as cur:
             with open(self.output_file_path, "w", encoding="utf-8") as file:
-                # cur.copy_to(file, 'for_csv', sep=',', null="")
                 cur.copy_expert("COPY for_csv TO STDOUT WITH CSV HEADER", file)
-
 
 def cluster_ids(clustered_dupes):
     for cluster, scores in clustered_dupes:

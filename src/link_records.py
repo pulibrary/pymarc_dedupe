@@ -51,7 +51,7 @@ class LinkRecords(MachineLearningModel):
             for record_id in cluster:
                 cluster_membership[record_id] = {
                     "cluster_id": cluster_id,
-                    "Link Score": score,
+                    "cluster_score": score,
                 }
         self.write_output(cluster_membership)
 
@@ -65,8 +65,8 @@ class LinkRecords(MachineLearningModel):
             header_unwritten = True
             additional_headers = [
                 "cluster_id",
-                "Link Score",
-                "source file",
+                "cluster_score",
+                "source_file",
             ]
             for fileno, filename in enumerate((self.left_file, self.right_file)):
                 with open(filename, encoding="utf-8") as f_input:
@@ -77,7 +77,7 @@ class LinkRecords(MachineLearningModel):
 
                     for row_id, row in enumerate(reader):
                         record_id = filename + str(row_id)
-                        row["source file"] = fileno
+                        row["source_file"] = fileno
                         self.update_row(cluster_membership, writer, row, record_id)
 
     # pylint: enable=duplicate-code

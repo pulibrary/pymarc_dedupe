@@ -15,7 +15,7 @@ edition TEXT,
 publisher_name TEXT,
 type_of VARCHAR,
 is_electronic_resource BOOL,
-record_source TEXT,
+source_file TEXT,
 UNIQUE (id)
 );
 """
@@ -42,7 +42,7 @@ class MarcToDb:
     def __init__(self, input_file_path):
         self.input_file_path = input_file_path
         self.conn = MarcToDb.conn
-        self.record_source, self.file_extension = os.path.splitext(
+        self.source_file, self.file_extension = os.path.splitext(
             os.path.basename(self.input_file_path)
         )
         self.cursor = self.conn.cursor()
@@ -65,7 +65,7 @@ class MarcToDb:
             mr.publisher_name() or None,
             mr.type_of() or None,
             mr.is_electronic_resource(),
-            self.record_source,
+            self.source_file,
         )
         try:
             self.cursor.execute(CREATE_RECORD_SQL, data)
