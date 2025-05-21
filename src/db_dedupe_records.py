@@ -1,5 +1,6 @@
 from os import listdir
 from os.path import isfile, join
+import time
 import dedupe
 import psycopg2
 import psycopg2.extras
@@ -43,7 +44,10 @@ class DbDedupeRecords(MachineLearningModel):
     def deduper(self):
         try:
             with open(self.settings_file_path, "rb") as sf:
-                print("reading from", self.settings_file_path)
+                print(
+                    f"""time: {time.asctime(time.localtime())} - 
+                        reading from {self.settings_file_path}"""
+                )
                 model = dedupe.StaticDedupe(sf)
         except FileNotFoundError:
             model = dedupe.Dedupe(self.fields())
@@ -52,26 +56,30 @@ class DbDedupeRecords(MachineLearningModel):
         return model
 
     def prepare_training(self, model):
-        with self.read_con.cursor("donor_select") as cur:
+        with self.read_con.cursor("record_select") as cur:
             cur.execute(RECORD_SELECT)
-            # temp_d = {i: row for i, row in enumerate(cur)}
             temp_d = dict(enumerate(cur))
         try:
             with open(self.training_file_path, encoding="utf-8") as tf:
                 print(
-                    f"Loading training data from {self.training_file_path}"
-                    "- you can skip console label if you would like"
+                    f"""time: {time.asctime(time.localtime())} - 
+                    Loading training data from {self.training_file_path}
+                     - you can skip console label if you would like"""
                 )
                 our_model = model.prepare_training(temp_d, training_file=tf)
+                print(f"time: {time.asctime(time.localtime())} - training file loaded")
         except FileNotFoundError:
             our_model = model.prepare_training(temp_d)
 
+        print(f"time: {time.asctime(time.localtime())} - deleting temp table")
         del temp_d
 
         return our_model
 
     def train_and_write_model(self, model):
+        print(f"time: {time.asctime(time.localtime())} - about to prepare training")
         self.prepare_training(model)
+        print(f"time: {time.asctime(time.localtime())} - about to console label")
         self.console_label(model)
         model.train()
         # When finished, save our training away to disk
@@ -82,21 +90,21 @@ class DbDedupeRecords(MachineLearningModel):
         return model
 
     def block(self, model):
-        print("blocking...")
-        print("creating blocking_map table")
+        print(f"time: {time.asctime(time.localtime())} - blocking...")
+        print(f"time: {time.asctime(time.localtime())} - creating blocking_map table")
         with self.write_con:
             with self.write_con.cursor() as cur:
                 cur.execute("DROP TABLE IF EXISTS blocking_map")
                 cur.execute("CREATE TABLE blocking_map (block_key text, id TEXT)")
-        print("creating inverted index")
+        print(f"time: {time.asctime(time.localtime())} - creating inverted index")
         for field in model.fingerprinter.index_fields:
             with self.read_con.cursor("field_values") as cur:
                 cur.execute(f"SELECT DISTINCT {field} FROM records")
                 field_data = (row[field] for row in cur)
                 model.fingerprinter.index(field_data, field)
 
-        print("writing blocking map")
-        with self.read_con.cursor("donor_select") as read_cur:
+        print(f"time: {time.asctime(time.localtime())} - writing blocking map")
+        with self.read_con.cursor("record_select") as read_cur:
             read_cur.execute(RECORD_SELECT)
 
             full_data = ((row["id"], row) for row in read_cur)
@@ -107,11 +115,11 @@ class DbDedupeRecords(MachineLearningModel):
                     write_cur.copy_expert(
                         "COPY blocking_map FROM STDIN WITH CSV",
                         Readable(b_data),
-                        size=10000,
+                        size=25000,
                     )
 
         model.fingerprinter.reset_indices()
-        print("indexing block_key")
+        print(f"time: {time.asctime(time.localtime())} - indexing block_key")
         with self.write_con:
             with self.write_con.cursor() as cur:
                 cur.execute(
@@ -124,7 +132,9 @@ class DbDedupeRecords(MachineLearningModel):
             with self.write_con.cursor() as cur:
                 cur.execute("DROP TABLE IF EXISTS entity_map")
 
-                print("creating entity_map database")
+                print(
+                    f"time: {time.asctime(time.localtime())} - creating entity_map database"
+                )
                 cur.execute(
                     "CREATE TABLE entity_map "
                     "(id TEXT, canon_id TEXT, "
@@ -136,11 +146,13 @@ class DbDedupeRecords(MachineLearningModel):
             "pairs", cursor_factory=psycopg2.extensions.cursor
         ) as read_cur:
             read_cur.execute(pairs_sql)
-            print("clustering...")
+            print(f"time: {time.asctime(time.localtime())} - clustering...")
             clustered_dupes = model.cluster(
                 model.score(self.record_pairs(read_cur)), threshold=self.match_threshold
             )
-            print("writing results to database")
+            print(
+                f"time: {time.asctime(time.localtime())} - writing results to database"
+            )
             with self.write_con:
                 with self.write_con.cursor() as write_cur:
                     write_cur.copy_expert(
@@ -162,6 +174,26 @@ class DbDedupeRecords(MachineLearningModel):
 
             if i % 10000 == 0:
                 print(i)
+
+    def create_table_for_csv(self):
+        print(
+            f"time: {time.asctime(time.localtime())} - creating table for output to csv"
+        )
+        with self.read_con.cursor() as cur:
+            cur.execute("""CREATE TEMPORARY TABLE for_csv
+                        AS SELECT canon_id, entity_map.id, cluster_score, title, publication_year, pagination, edition, publisher_name, type_of, is_electronic_resource 
+                        FROM entity_map 
+                        INNER JOIN records 
+                        ON entity_map.id = records.id 
+                        ORDER BY canon_id, cluster_score;
+""")
+
+    def write_to_csv(self):
+        print(f"time: {time.asctime(time.localtime())} - writing results to csv")
+        with self.read_con.cursor() as cur:
+            with open(self.output_file_path, "w", encoding="utf-8") as file:
+                # cur.copy_to(file, 'for_csv', sep=',', null="")
+                cur.copy_expert("COPY for_csv TO STDOUT WITH CSV HEADER", file)
 
 
 def cluster_ids(clustered_dupes):

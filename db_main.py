@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import argparse
+import time
 from src.db_dedupe_records import DbDedupeRecords
 
 if __name__ == "__main__":
@@ -27,12 +28,14 @@ if __name__ == "__main__":
 
     input_dir = args.input_dir
     output_dir = args.output_dir
+    print(f"time: {time.asctime(time.localtime())} - BEGIN")
     print("Input directory is " + input_dir)
     print("Output directory is " + output_dir)
-
-    print("importing data ...")
+    print(f"time: {time.asctime(time.localtime())} - importing data ...")
 
     my_class = DbDedupeRecords(input_dir, output_dir)
     model = my_class.deduper()
     my_class.block(model)
     my_class.cluster(model)
+    my_class.create_table_for_csv()
+    my_class.write_to_csv()
