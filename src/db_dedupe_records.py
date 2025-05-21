@@ -46,7 +46,7 @@ class DbDedupeRecords(MachineLearningModel):
         try:
             with open(self.settings_file_path, "rb") as sf:
                 print(
-                    f"""time: {time.asctime(time.localtime())} - 
+                    f"""time: {time.asctime(time.localtime())} -
                         reading from {self.settings_file_path}"""
                 )
                 model = dedupe.StaticDedupe(sf)
@@ -65,7 +65,7 @@ class DbDedupeRecords(MachineLearningModel):
         try:
             with open(self.training_file_path, encoding="utf-8") as tf:
                 print(
-                    f"""time: {time.asctime(time.localtime())} - 
+                    f"""time: {time.asctime(time.localtime())} -
                     Loading training data from {self.training_file_path}
                      - you can skip console label if you would like"""
                 )

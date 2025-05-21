@@ -50,7 +50,7 @@ class MarcToDb:
 
     def to_db(self):
         print(
-            f"""time: {time.asctime(time.localtime())} - 
+            f"""time: {time.asctime(time.localtime())} -
                 writing records in {self.input_file_path} to database
             """
         )
