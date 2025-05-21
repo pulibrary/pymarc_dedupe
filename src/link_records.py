@@ -50,7 +50,7 @@ class LinkRecords(MachineLearningModel):
         for cluster_id, (cluster, score) in enumerate(clustered_records):
             for record_id in cluster:
                 cluster_membership[record_id] = {
-                    "Cluster ID": cluster_id,
+                    "cluster_id": cluster_id,
                     "Link Score": score,
                 }
         self.write_output(cluster_membership)
@@ -64,7 +64,7 @@ class LinkRecords(MachineLearningModel):
         with open(self.output_file_path, "w", encoding="utf-8") as f:
             header_unwritten = True
             additional_headers = [
-                "Cluster ID",
+                "cluster_id",
                 "Link Score",
                 "source file",
             ]

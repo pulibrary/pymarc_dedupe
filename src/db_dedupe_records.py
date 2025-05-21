@@ -41,6 +41,7 @@ class DbDedupeRecords(MachineLearningModel):
             port=settings.db_port,
         )
 
+    # pylint: disable=duplicate-code
     def deduper(self):
         try:
             with open(self.settings_file_path, "rb") as sf:
@@ -54,6 +55,8 @@ class DbDedupeRecords(MachineLearningModel):
             model = self.train_and_write_model(model)
 
         return model
+
+    # pylint: enable=duplicate-code
 
     def prepare_training(self, model):
         with self.read_con.cursor("record_select") as cur:
@@ -137,7 +140,7 @@ class DbDedupeRecords(MachineLearningModel):
                 )
                 cur.execute(
                     "CREATE TABLE entity_map "
-                    "(id TEXT, canon_id TEXT, "
+                    "(id TEXT, cluster_id TEXT, "
                     " cluster_score FLOAT, PRIMARY KEY(id))"
                 )
         with open("pairs.sql", "r", encoding="utf-8") as file:
@@ -162,7 +165,7 @@ class DbDedupeRecords(MachineLearningModel):
                     )
         with self.write_con:
             with self.write_con.cursor() as cur:
-                cur.execute("CREATE INDEX head_index ON entity_map (canon_id)")
+                cur.execute("CREATE INDEX head_index ON entity_map (cluster_id)")
 
     def record_pairs(self, result_set):
         for i, row in enumerate(result_set):
@@ -181,11 +184,11 @@ class DbDedupeRecords(MachineLearningModel):
         )
         with self.read_con.cursor() as cur:
             cur.execute("""CREATE TEMPORARY TABLE for_csv
-                        AS SELECT canon_id, entity_map.id, cluster_score, title, publication_year, pagination, edition, publisher_name, type_of, is_electronic_resource 
+                        AS SELECT cluster_id, entity_map.id, cluster_score, title, publication_year, pagination, edition, publisher_name, type_of, is_electronic_resource 
                         FROM entity_map 
                         INNER JOIN records 
                         ON entity_map.id = records.id 
-                        ORDER BY canon_id, cluster_score;
+                        ORDER BY cluster_id, cluster_score;
 """)
 
     def write_to_csv(self):

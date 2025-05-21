@@ -53,7 +53,7 @@ python db_main.py --input_dir="tests/fixtures/for_db"
 
 3. If you do not already have settings and training data, it will open an interactive session in your terminal to see whether you, as a human, think two things are duplicates or not, to train the Machine Learning algorithm. Follow the instructions in your terminal
 4. It will output a CSV of all the records you input, with three added columns:
-  a. Cluster ID - all records that it thinks are matches of each other will have the same Cluster ID. If a record does not have a Cluster ID, that means the machine learning algorithm does not think it has any duplicates.
+  a. cluster_id - all records that it thinks are matches of each other will have the same cluster_id. If a record does not have a cluster_id, that means the machine learning algorithm does not think it has any duplicates.
   b. Link score - how confident the algorithm is that the record belongs to its cluster. The higher the number, the more likely the record is a true match
   c. source file - which file the record displayed is from
 

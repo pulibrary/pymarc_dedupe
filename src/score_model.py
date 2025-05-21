@@ -20,7 +20,7 @@ class ScoreModel:
         with open(model_csv, encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                data_d[row["id"]] = dict([("cluster_id", row["Cluster ID"])])
+                data_d[row["id"]] = dict([("cluster_id", row["cluster_id"])])
         return data_d
 
     def read_labels_data(self, labels_csv):
