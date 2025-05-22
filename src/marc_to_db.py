@@ -63,8 +63,14 @@ class MarcToDb:
             raise ValueError("Files must be either xml or json")
 
     def add_record(self, record):
+        try:
+            self.cursor.execute(CREATE_RECORD_SQL, self.record_data(record))
+        except (psycopg2.DatabaseError, exceptions.MissingLinkedFields):
+            pass
+
+    def record_data(self, record):
         mr = MarcRecord(record)
-        data = (
+        return (
             mr.id(),
             mr.title() or None,
             mr.author() or None,
@@ -76,7 +82,3 @@ class MarcToDb:
             mr.is_electronic_resource(),
             self.source_file,
         )
-        try:
-            self.cursor.execute(CREATE_RECORD_SQL, data)
-        except (psycopg2.DatabaseError, exceptions.MissingLinkedFields):
-            pass

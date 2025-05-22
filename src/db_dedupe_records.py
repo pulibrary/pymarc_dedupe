@@ -143,7 +143,7 @@ class DbDedupeRecords(MachineLearningModel):
                 cur.execute("DROP TABLE IF EXISTS entity_map")
 
                 print(
-                    f"time: {time.asctime(time.localtime())} - creating entity_map database"
+                    f"time: {time.asctime(time.localtime())} - creating entity_map table"
                 )
                 cur.execute(
                     "CREATE TABLE entity_map "
@@ -163,6 +163,11 @@ class DbDedupeRecords(MachineLearningModel):
             print(
                 f"time: {time.asctime(time.localtime())} - writing results to database"
             )
+            # this is very slow on large data sets and only across two CPUs
+            # Is there a way to multi-thread here?
+            # Also using a ton of swap memory
+            # Does not seem to be writing to database in chunks?
+            # Even though I think it's writing to stdin in chunks?
             with self.write_con:
                 with self.write_con.cursor() as write_cur:
                     write_cur.copy_expert(
@@ -191,7 +196,7 @@ class DbDedupeRecords(MachineLearningModel):
         )
         with self.read_con.cursor() as cur:
             cur.execute("""CREATE TEMPORARY TABLE for_csv
-                        AS SELECT cluster_id, entity_map.id, cluster_score, title, publication_year, pagination, edition, publisher_name, type_of, is_electronic_resource 
+                        AS SELECT cluster_id, entity_map.id, cluster_score, title, publication_year, pagination, edition, publisher_name, type_of, is_electronic_resource, source_file
                         FROM entity_map 
                         INNER JOIN records 
                         ON entity_map.id = records.id 
