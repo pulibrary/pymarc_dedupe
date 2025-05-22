@@ -1,3 +1,4 @@
+import threading
 from os import listdir
 from os.path import isfile, join
 import time
@@ -22,11 +23,12 @@ class DbDedupeRecords(MachineLearningModel):
         directory_list = listdir(input_directory)
         if len(directory_list) == 0:
             raise ValueError(f"Input directory {input_directory} must include files")
+        threads = []
         for path in directory_list:
             full_path = join(input_directory, path)
             if isfile(full_path):
-                # save to database
-                MarcToDb(full_path).to_db()
+                t = threading.Thread(target=ingest_to_db, args=(full_path,))
+                threads.append(t)
         self.read_con = psycopg2.connect(
             database=settings.db_name,
             user=settings.db_user,
@@ -40,6 +42,11 @@ class DbDedupeRecords(MachineLearningModel):
             host=settings.db_host,
             port=settings.db_port,
         )
+        for t in threads:
+            t.start()
+
+        for t in threads:
+            t.join()
 
     # pylint: disable=duplicate-code
     def deduper(self):
@@ -203,3 +210,7 @@ def cluster_ids(clustered_dupes):
         cluster_id = cluster[0]
         for record_id, score in zip(cluster, scores):
             yield record_id, cluster_id, score
+
+
+def ingest_to_db(full_path):
+    MarcToDb(full_path).to_db()

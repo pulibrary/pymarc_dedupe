@@ -1,10 +1,11 @@
 import os.path
 import time
 import psycopg2
-from pymarc import map_xml
+from pymarc import exceptions
 from config import settings
 from src.marc_record import MarcRecord
 from src.streaming_json_handler import map_json
+from src.streaming_xml_handler import map_xml
 
 CREATE_TABLE_SQL = """CREATE TABLE IF NOT EXISTS records (
 id TEXT,
@@ -77,5 +78,5 @@ class MarcToDb:
         )
         try:
             self.cursor.execute(CREATE_RECORD_SQL, data)
-        except psycopg2.DatabaseError:
+        except (psycopg2.DatabaseError, exceptions.MissingLinkedFields):
             pass

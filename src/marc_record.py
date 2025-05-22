@@ -208,7 +208,7 @@ class MarcRecord:
             return re.match(
                 "electronic reproduction", self.record["533"].get("a"), re.IGNORECASE
             )
-        except KeyError:
+        except (KeyError, TypeError):
             return False
 
     def __is_electronic_resource_from_description(self):
@@ -228,9 +228,12 @@ class MarcRecord:
 
     def __normalize_edition(self, edition):
         edition_mapping = {"Ed.": "Edition", "ed.": "edition"}
-        for key, value in edition_mapping.items():
-            edition = re.sub(key, value, edition)
-        return self.__strip_punctuation(edition)
+        try:
+            for key, value in edition_mapping.items():
+                edition = re.sub(key, value, edition)
+            return self.__strip_punctuation(edition)
+        except TypeError:
+            return ""
 
     def __normalize_extent(self, extent):
         extent_mapping = {
