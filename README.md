@@ -48,6 +48,9 @@ python db_main.py --input_dir="db_input_files" --output_dir="db_experiments"
 
 # short experiment
 python db_main.py --input_dir="tests/fixtures/for_db"
+
+# for comparison
+python db_main.py --input_dir="/Users/kadelm/projects/dedup_for_comparison" --output_dir="for_comparison"
 ```
 
 

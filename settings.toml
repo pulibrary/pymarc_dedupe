@@ -8,6 +8,12 @@ db_user = "postgres"
 db_host = "localhost"
 db_port = 5433
 
+[for_comparison]
+db_name = "database"
+db_user = "postgres"
+db_host = "localhost"
+db_port = 5435
+
 [local_test]
 name = "testing"
 db_name = "database"
@@ -26,3 +32,4 @@ name = "staging-ing"
 
 [production]
 name = "production-ing"
+

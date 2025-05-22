@@ -6,3 +6,6 @@ services:
   test_db:
     type: postgres:16
     portforward: 5434
+  for_comparison_db:
+    type: postgres:16
+    portforward: 5435
