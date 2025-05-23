@@ -67,6 +67,7 @@ class DbDedupeRecords(MachineLearningModel):
 
     def prepare_training(self, model):
         with self.read_con.cursor("record_select") as cur:
+            print("Building temporary dictionary of records for training")
             cur.execute(RECORD_SELECT)
             temp_d = dict(enumerate(cur))
         try:
@@ -79,9 +80,13 @@ class DbDedupeRecords(MachineLearningModel):
                 our_model = model.prepare_training(temp_d, training_file=tf)
                 print(f"time: {time.asctime(time.localtime())} - training file loaded")
         except FileNotFoundError:
+            print(
+                f"time: {time.asctime(time.localtime())} - "
+                "No training file found, preparing training"
+            )
             our_model = model.prepare_training(temp_d)
 
-        print(f"time: {time.asctime(time.localtime())} - deleting temp table")
+        print(f"time: {time.asctime(time.localtime())} - deleting temp dictionary")
         del temp_d
 
         return our_model
