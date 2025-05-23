@@ -175,9 +175,7 @@ class DbDedupeRecords(MachineLearningModel):
                         Readable(cluster_ids(clustered_dupes)),
                         size=10000,
                     )
-        print(
-                f"time: {time.asctime(time.localtime())} - adding index to entity_map"
-            )
+        print(f"time: {time.asctime(time.localtime())} - adding index to entity_map")
         with self.write_con:
             with self.write_con.cursor() as cur:
                 cur.execute("CREATE INDEX head_index ON entity_map (cluster_id)")
