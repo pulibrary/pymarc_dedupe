@@ -1,3 +1,4 @@
+from pytest import raises
 from src.marc_to_db import MarcToDb
 
 
@@ -27,3 +28,10 @@ def test_turning_marc_json_to_db():
         cur.execute(sql)
         results = cur.fetchall()
         assert (len(results)) == 7
+
+
+def test_no_json_or_xml_files():
+    MarcToDb.find_or_create_table()
+    input_directory = "tests/fixtures/no_marc_files"
+    with raises(ValueError):
+        MarcToDb(input_directory).to_db()
