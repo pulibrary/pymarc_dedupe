@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import argparse
 import time
-from src.db_dedupe_records import DbDedupeRecords
+from src.models.db_dedupe_records import DbDedupeRecords
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

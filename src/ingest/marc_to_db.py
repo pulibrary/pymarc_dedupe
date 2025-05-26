@@ -3,9 +3,9 @@ import time
 import psycopg2
 from pymarc import exceptions
 from config import settings
-from src.marc_record import MarcRecord
-from src.streaming_json_handler import map_json
-from src.streaming_xml_handler import map_xml
+from src.normalize.marc_record import MarcRecord
+from src.handlers.streaming_json_handler import map_json
+from src.handlers.streaming_xml_handler import map_xml
 
 CREATE_TABLE_SQL = """CREATE TABLE IF NOT EXISTS records (
 id TEXT,

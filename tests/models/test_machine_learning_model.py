@@ -1,5 +1,5 @@
 from pytest import raises
-from src.machine_learning_model import MachineLearningModel
+from src.models.machine_learning_model import MachineLearningModel
 
 
 def test_inheritance():

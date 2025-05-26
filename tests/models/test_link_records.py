@@ -1,7 +1,7 @@
 import shutil
 from unittest.mock import patch
 
-from src.link_records import LinkRecords
+from src.models.link_records import LinkRecords
 
 
 @patch("builtins.input")

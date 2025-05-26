@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from src.dedupe_records import DedupeRecords
+from src.models.dedupe_records import DedupeRecords
 
 
 @patch("builtins.input")

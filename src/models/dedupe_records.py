@@ -1,7 +1,7 @@
 import csv
 import dedupe
-from src.link_records_file import LinkRecordsFile
-from src.machine_learning_model import MachineLearningModel
+from src.normalize.link_records_file import LinkRecordsFile
+from src.models.machine_learning_model import MachineLearningModel
 
 
 class DedupeRecords(MachineLearningModel):

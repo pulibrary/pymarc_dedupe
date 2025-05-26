@@ -1,4 +1,4 @@
-from src.marc_to_csv import MarcToCsv
+from src.ingest.marc_to_csv import MarcToCsv
 
 
 def test_turning_marc_xml_to_csv():

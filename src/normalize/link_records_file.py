@@ -1,6 +1,6 @@
 import csv
 import os.path
-from src.marc_to_csv import MarcToCsv
+from src.ingest.marc_to_csv import MarcToCsv
 
 
 class LinkRecordsFile:

@@ -1,7 +1,7 @@
 from os import makedirs
 from unittest.mock import patch
 from pytest import raises
-from src.db_dedupe_records import DbDedupeRecords
+from src.models.db_dedupe_records import DbDedupeRecords
 
 
 @patch("builtins.input")

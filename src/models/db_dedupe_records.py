@@ -6,8 +6,8 @@ import dedupe
 import psycopg2
 import psycopg2.extras
 from config import settings
-from src.marc_to_db import MarcToDb
-from src.machine_learning_model import MachineLearningModel
+from src.ingest.marc_to_db import MarcToDb
+from src.models.machine_learning_model import MachineLearningModel
 from src.readable import Readable
 
 RECORD_SELECT = """SELECT

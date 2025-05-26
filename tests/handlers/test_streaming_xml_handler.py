@@ -1,4 +1,4 @@
-from src.streaming_xml_handler import StreamingXmlHandler, parse_xml
+from src.handlers.streaming_xml_handler import StreamingXmlHandler, parse_xml
 
 
 def test_streaming_xml_handler():

@@ -1,5 +1,5 @@
 import csv
-from src.confusion_matrix import ConfusionMatrix
+from src.scoring.confusion_matrix import ConfusionMatrix
 
 
 class ScoreModel:
