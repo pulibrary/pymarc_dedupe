@@ -372,6 +372,18 @@ def test_vernacular_author():
     assert (new_record.author()) == "Χατζηαντωνίου, Κωστας"
 
 
+def test_author_no_subfield_a():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(
+            tag="100",
+            subfields=[Subfield(code="d", value="1838-1918")],
+        )
+    )
+    new_record = MarcRecord(pymarc_record)
+    assert (new_record.author()) == ""
+
+
 # This might be weird behavior?
 def test_number_of_characters():
     pymarc_record = Record()
