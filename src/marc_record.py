@@ -227,7 +227,7 @@ class MarcRecord:
             return False
 
     def __normalize_edition(self, edition):
-        edition_mapping = {"Ed.": "Edition", "ed.": "edition"}
+        edition_mapping = {"Ed\.": "Edition", "ed\.": "edition"}
         try:
             for key, value in edition_mapping.items():
                 edition = re.sub(key, value, edition)

@@ -272,6 +272,24 @@ def test_edition_statement():
     assert (new_record.edition()) == "2nd Edition"
 
 
+def test_full_edition_statement():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(tag="250", subfields=[Subfield(code="a", value="Second Edition")])
+    )
+    new_record = MarcRecord(pymarc_record)
+    assert (new_record.edition()) == "Second Edition"
+
+
+def test_type_error_edition_statement():
+    pymarc_record = Record()
+    pymarc_record.add_field(
+        Field(tag="250", subfields=[Subfield(code="b", value="with revisions")])
+    )
+    new_record = MarcRecord(pymarc_record)
+    assert (new_record.edition()) == ""
+
+
 def test_publisher_name_264():
     pymarc_record = Record()
     pymarc_record.add_field(
