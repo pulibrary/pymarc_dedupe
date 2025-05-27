@@ -88,7 +88,14 @@ Bring up the database using lando
 lando start
 ```
 
+4. Create a .env file with the appropriate environment from the settings.toml file
+
+```bash
+cp .env.example .env
+```
+
 ### Testing
+Uncomment the line in the pyproject.toml setting the `ENV_FOR_DYNACONF`
 ```bash
 pytest
 ```

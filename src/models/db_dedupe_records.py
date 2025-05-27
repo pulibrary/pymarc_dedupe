@@ -202,7 +202,7 @@ class DbDedupeRecords(MachineLearningModel):
         )
         with self.read_con.cursor() as cur:
             cur.execute("""CREATE TEMPORARY TABLE for_csv
-                        AS SELECT cluster_id, entity_map.id, cluster_score, title, publication_year, pagination, edition, publisher_name, type_of, is_electronic_resource, source_file
+                        AS SELECT cluster_id, entity_map.id, cluster_score, title, publication_year, pagination, edition, publisher_name, type_of, is_electronic_resource, source_file, goldrush
                         FROM entity_map 
                         INNER JOIN records 
                         ON entity_map.id = records.id 

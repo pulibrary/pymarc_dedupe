@@ -6,6 +6,7 @@ from config import settings
 from src.normalize.marc_record import MarcRecord
 from src.handlers.streaming_json_handler import map_json
 from src.handlers.streaming_xml_handler import map_xml
+from src.normalize.gold_rush import GoldRush
 
 CREATE_TABLE_SQL = """CREATE TABLE IF NOT EXISTS records (
 id TEXT,
@@ -18,16 +19,28 @@ publisher_name TEXT,
 type_of VARCHAR,
 is_electronic_resource BOOL,
 source_file TEXT,
+goldrush TEXT,
 UNIQUE (id)
 );
 """
 
 CREATE_RECORD_SQL = """INSERT INTO records VALUES
-(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+"""
+
+ADD_GOLDRUSH_COLUMN_SQL = """ALTER TABLE records
+ADD goldrush text;
+"""
+
+ADD_GOLDRUSH_TO_RECORD_SQL = """UPDATE records
+SET goldrush = %s
+WHERE id = %s;
 """
 
 
 class MarcToDb:
+    """"""
+
     conn = psycopg2.connect(
         database=settings.db_name,
         user=settings.db_user,
@@ -39,7 +52,11 @@ class MarcToDb:
     @classmethod
     def find_or_create_table(cls):
         with cls.conn.cursor() as cur:
-            cur.execute(CREATE_TABLE_SQL)
+            try:
+                cur.execute(CREATE_TABLE_SQL)
+                cur.execute(ADD_GOLDRUSH_COLUMN_SQL)
+            except psycopg2.errors.DuplicateColumn:
+                pass
 
     def __init__(self, input_file_path):
         self.input_file_path = input_file_path
@@ -66,7 +83,10 @@ class MarcToDb:
         try:
             self.cursor.execute(CREATE_RECORD_SQL, self.record_data(record))
         except (psycopg2.DatabaseError, exceptions.MissingLinkedFields):
-            pass
+            mr = MarcRecord(record)
+            self.cursor.execute(
+                ADD_GOLDRUSH_TO_RECORD_SQL, (GoldRush(mr).as_gold_rush(), mr.id())
+            )
 
     def record_data(self, record):
         mr = MarcRecord(record)
@@ -81,4 +101,5 @@ class MarcToDb:
             mr.type_of() or None,
             mr.is_electronic_resource(),
             self.source_file,
+            GoldRush(mr).as_gold_rush(),
         )
