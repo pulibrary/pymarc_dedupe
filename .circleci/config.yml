@@ -1,11 +1,7 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/configuration-reference
 version: 2.1
 orbs:
   python: circleci/python@3.1.0
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
   lint:
     docker:
@@ -15,9 +11,6 @@ jobs:
       - python/install-packages:
           pkg-manager: pip
           pip-dependency-file: requirements/testing.txt
-      # - run:
-      #     name: "Install requirements"
-      #     command: "pip install -r requirements/testing.txt"
       - run:
           name: 'python: ruff format'
           command: ruff format . --check
@@ -29,11 +22,7 @@ jobs:
           name: 'python: pylint'
           command: pylint src tests --disable=C0114,C0115,C0116
   tests:
-    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
     docker:
-      # Specify the version you desire here
-      # See: https://circleci.com/developer/images/image/cimg/base
       - image: cimg/python:3.12
         environment:
           ENV_FOR_DYNACONF: 'ci'
@@ -42,16 +31,11 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ''
           POSTGRES_DB: database
-    # Add steps to the job
-    # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: pip
           pip-dependency-file: requirements/testing.txt
-      # - run:
-      #     name: "Install requirements"
-      #     command: "pip install -r requirements/testing.txt"
       - run:
           name: "Run tests and measure coverage"
           command: "coverage run --source=src -m pytest tests/ && coveralls"
