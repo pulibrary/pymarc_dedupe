@@ -1,3 +1,6 @@
+"""Module for shared logic for Machine Learning models for deduplication.
+Not intended to be used independently"""
+
 import os.path
 import csv
 import dedupe

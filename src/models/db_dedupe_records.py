@@ -1,3 +1,7 @@
+"""Module for creating a Machine Learning model to find duplicate
+records within all files in a directory using a database.
+This allows for much larger data sets."""
+
 import threading
 from os import listdir
 from os.path import isfile, join

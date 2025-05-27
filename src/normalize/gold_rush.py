@@ -1,3 +1,5 @@
+"""Module to translate a marc record to a match key string"""
+
 import re
 from unidecode import unidecode
 
@@ -9,7 +11,7 @@ class GoldRush:
     def as_gold_rush(self):
         return (
             self.title()
-            + (self.publication_year() or "")
+            + (self.publication_year())
             + self.pagination()
             + self.edition()
             + self.publisher_name()

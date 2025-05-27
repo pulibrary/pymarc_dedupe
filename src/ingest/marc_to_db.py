@@ -1,3 +1,6 @@
+"""Module providing a function to write an xml or
+json file of marc records to a Postgres database"""
+
 import os.path
 import time
 import psycopg2
@@ -39,8 +42,6 @@ WHERE id = %s;
 
 
 class MarcToDb:
-    """"""
-
     conn = psycopg2.connect(
         database=settings.db_name,
         user=settings.db_user,
@@ -55,7 +56,7 @@ class MarcToDb:
             try:
                 cur.execute(CREATE_TABLE_SQL)
                 cur.execute(ADD_GOLDRUSH_COLUMN_SQL)
-            except psycopg2.errors.DuplicateColumn:
+            except psycopg2.DatabaseError:
                 pass
 
     def __init__(self, input_file_path):

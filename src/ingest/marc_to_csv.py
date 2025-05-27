@@ -1,3 +1,5 @@
+"""Module providing a function to write an xml or json file of marc records to a CSV file"""
+
 import csv
 import os.path
 from xml.sax import SAXParseException

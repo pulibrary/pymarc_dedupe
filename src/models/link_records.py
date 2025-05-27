@@ -1,3 +1,6 @@
+"""Module for creating a Machine Learning model to find duplicate
+records between two files containing marc records in-memory"""
+
 import csv
 import dedupe
 from src.normalize.link_records_file import LinkRecordsFile

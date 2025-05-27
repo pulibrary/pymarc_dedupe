@@ -1,3 +1,5 @@
+"""Module providing a function to read from StringIO to CSV in in chunks."""
+
 import csv
 import io
 import itertools
@@ -11,6 +13,7 @@ class Readable:
         self.iterator = iterator
 
     def read(self, size):
+        """Method that writes database output to StringIO using CSV Writer in chunks - I think"""
         self.writer.writerows(itertools.islice(self.iterator, size))
 
         chunk = self.output.getvalue()
