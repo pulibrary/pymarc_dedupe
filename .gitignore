@@ -13,3 +13,6 @@ tests/fixtures/marc_records.csv
 tests/test_outputs/*
 experiments_files_and_output/*
 .coverage*
+
+# Ignore dynaconf secret files
+.secrets.*

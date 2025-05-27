@@ -1,7 +1,9 @@
 #!/usr/bin/python
 import argparse
-from src.link_records import LinkRecords
-from src.dedupe_records import DedupeRecords
+
+# from config import settings
+from src.models.link_records import LinkRecords
+from src.models.dedupe_records import DedupeRecords
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

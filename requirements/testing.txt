@@ -4,3 +4,4 @@ pytest
 pylint
 ruff
 pytest-cov
+pytest-env

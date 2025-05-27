@@ -1,0 +1,6 @@
+[tool.pytest_env]
+# Uncomment the line below for local testing
+# ENV_FOR_DYNACONF = "local_test"
+
+[tool.ruff]
+exclude = [".venv", ".cci_pycache"]

@@ -1,3 +1,6 @@
 pymarc
 unidecode
 dedupe
+ijson
+psycopg2
+dynaconf
