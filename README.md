@@ -17,6 +17,8 @@ The first layer of normalization consists of selecting a subset of Marc fields a
 
 This will include showing fields in the vernacular script when available. Since not everyone is familiar with different scripts, these will be presented with both the transliterated information and the vernacular script. The vernacular script is more likely to be accurately matched by both the machine learning algorithm and humans who are familiar with that script, the transliterated script is more likely to be accurately matched by humans who are not familiar with the vernacular script.
 
+This uses the Python dedupe.io library, which has [excellent documentation of how it works](https://docs.dedupe.io/en/latest/how-it-works/Matching-records.html).  In general, it uses different similarity algorithms for fields of different types, and we are able to define our own types with their own comparisons.  It uses active learning to determine the appropriate weights for each field and the appropriate blocking rules to use.  No weights or blocking decisions are included in this repository at this point, so you can use the instructions below to start the active learning training process (held in the experiments_files_and_output directory).
+
 ### Second layer of normalization - GoldRush algorithm
 The second layer of normalization will be built on the first layer of normalization, and will be an interpretation of the GoldRush algorithm, intended for exact string matching. 
 
