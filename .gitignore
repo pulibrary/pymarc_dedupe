@@ -16,3 +16,8 @@ experiments_files_and_output/*
 
 # Ignore dynaconf secret files
 .secrets.*
+
+# Build artifacts
+*.egg-info/
+dist/
+build/

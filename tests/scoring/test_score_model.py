@@ -1,4 +1,4 @@
-from src.scoring.score_model import ScoreModel
+from pymarc_dedupe.scoring.score_model import ScoreModel
 
 
 def test_scoring():

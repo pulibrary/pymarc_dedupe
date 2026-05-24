@@ -1,4 +1,4 @@
-from src.handlers.streaming_xml_handler import StreamingXmlHandler, parse_xml
+from pymarc_dedupe.handlers.streaming_xml_handler import StreamingXmlHandler, parse_xml
 
 
 def test_streaming_xml_handler():

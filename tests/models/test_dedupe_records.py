@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from src.models.dedupe_records import DedupeRecords
+from pymarc_dedupe.models.dedupe_records import DedupeRecords
 
 
 @patch("builtins.input")

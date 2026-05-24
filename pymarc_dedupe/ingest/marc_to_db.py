@@ -6,10 +6,10 @@ import time
 import psycopg2
 from pymarc import exceptions
 from config import settings
-from src.normalize.marc_record import MarcRecord
-from src.handlers.streaming_json_handler import map_json
-from src.handlers.streaming_xml_handler import map_xml
-from src.normalize.gold_rush import GoldRush
+from pymarc_dedupe.normalize.marc_record import MarcRecord
+from pymarc_dedupe.handlers.streaming_json_handler import map_json
+from pymarc_dedupe.handlers.streaming_xml_handler import map_xml
+from pymarc_dedupe.normalize.gold_rush import GoldRush
 
 CREATE_TABLE_SQL = """CREATE TABLE IF NOT EXISTS records (
 id TEXT,

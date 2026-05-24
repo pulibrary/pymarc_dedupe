@@ -1,5 +1,5 @@
 from pymarc import Record, Field, Subfield
-from src.normalize.marc_record import MarcRecord
+from pymarc_dedupe.normalize.marc_record import MarcRecord
 
 
 def test_against_real_data(all_records):

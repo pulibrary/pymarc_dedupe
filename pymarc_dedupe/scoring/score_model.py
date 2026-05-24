@@ -1,5 +1,5 @@
 import csv
-from src.scoring.confusion_matrix import ConfusionMatrix
+from pymarc_dedupe.scoring.confusion_matrix import ConfusionMatrix
 
 
 class ScoreModel:

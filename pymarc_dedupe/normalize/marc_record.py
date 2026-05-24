@@ -1,7 +1,7 @@
 import string
 import re
 import pymarc
-from src.normalize.gold_rush import GoldRush
+from pymarc_dedupe.normalize.gold_rush import GoldRush
 
 
 class MarcRecord:

@@ -1,6 +1,6 @@
 import csv
 import os.path
-from src.ingest.marc_to_csv import MarcToCsv
+from pymarc_dedupe.ingest.marc_to_csv import MarcToCsv
 
 
 class LinkRecordsFile:
