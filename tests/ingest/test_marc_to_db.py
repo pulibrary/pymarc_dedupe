@@ -1,5 +1,5 @@
 from pytest import raises
-from src.ingest.marc_to_db import MarcToDb
+from pymarc_dedupe.ingest.marc_to_db import MarcToDb
 
 
 def test_turning_marc_xml_to_db():

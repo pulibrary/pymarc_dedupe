@@ -3,8 +3,8 @@ records between two files containing marc records in-memory"""
 
 import csv
 import dedupe
-from src.normalize.link_records_file import LinkRecordsFile
-from src.models.machine_learning_model import MachineLearningModel
+from pymarc_dedupe.normalize.link_records_file import LinkRecordsFile
+from pymarc_dedupe.models.machine_learning_model import MachineLearningModel
 
 
 class LinkRecords(MachineLearningModel):

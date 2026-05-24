@@ -1,5 +1,5 @@
 import os
-from src.normalize.link_records_file import LinkRecordsFile
+from pymarc_dedupe.normalize.link_records_file import LinkRecordsFile
 
 
 def test_importing_xml_file(example_dictionary):

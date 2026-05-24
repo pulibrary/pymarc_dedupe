@@ -10,9 +10,9 @@ import dedupe
 import psycopg2
 import psycopg2.extras
 from config import settings
-from src.ingest.marc_to_db import MarcToDb
-from src.models.machine_learning_model import MachineLearningModel
-from src.readable import Readable
+from pymarc_dedupe.ingest.marc_to_db import MarcToDb
+from pymarc_dedupe.models.machine_learning_model import MachineLearningModel
+from pymarc_dedupe.readable import Readable
 
 RECORD_SELECT = """SELECT
                     id, title, author, publication_year, pagination, edition, publisher_name, type_of, is_electronic_resource

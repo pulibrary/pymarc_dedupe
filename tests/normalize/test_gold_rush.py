@@ -1,6 +1,6 @@
 from pymarc import Record, Field, Subfield
-from src.normalize.marc_record import MarcRecord
-from src.normalize.gold_rush import GoldRush
+from pymarc_dedupe.normalize.marc_record import MarcRecord
+from pymarc_dedupe.normalize.gold_rush import GoldRush
 
 
 def test_potentially_empty_fields(all_records):
